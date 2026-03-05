@@ -5,7 +5,7 @@ class Stops:
     def __init__(self):
         self.data = main_consumer.stops
 
-    def calculate_distance_beetwen_station(self, stop_id):
+    def calculate_distance_between_station(self, stop_id):
         """
         return {"stop_id": distance}
         """
