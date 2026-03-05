@@ -23,7 +23,7 @@ class DataConsumer:
         self.calendar_dates = pd.read_csv(os.path.join(self.data_dir, "calendar_dates.txt"))
         self.feed_info = pd.read_csv(os.path.join(self.data_dir, "feed_info.txt"))
 
-    def print_info():
+    def print_info(self):
         print("Agency:")
         print(self.agency.head())
         print("\nRoutes:")
