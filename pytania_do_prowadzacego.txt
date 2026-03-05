@@ -1,1 +1,2 @@
 1. czas przejazdu jak najmniejszy, to prostu roznica - czas z odjazdu z pierwszego przystanku  i przyjazd na ostatni przystanek? Czy jakos inaczej
+2 czy block id w trips.txt ma znaczenie i direction_id
