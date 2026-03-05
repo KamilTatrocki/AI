@@ -1,2 +1,13 @@
 # .gitignore
 *:Zone.Identifier
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Rozszerzenia C (jeśli takie masz)
+*.so
+
+# Opcjonalnie: foldery środowisk wirtualnych (jeśli nie używasz uv do ich zarządzania poza projektem)
+.venv/
+venv/
+env/

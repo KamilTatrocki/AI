@@ -8,9 +8,14 @@ class Calendar:
         self.trips_data = main_consumer.trips
         self._day_cache = {}
 
+    _DAY_ABBR_TO_FULL = {
+        'mon': 'monday', 'tue': 'tuesday', 'wed': 'wednesday',
+        'thu': 'thursday', 'fri': 'friday', 'sat': 'saturday', 'sun': 'sunday',
+    }
+
     def get_Active_service_id_for_day(self, day: datetime):
         day_val = int(day.strftime('%Y%m%d'))
-        day_name = day.strftime('%a').lower()
+        day_name = self._DAY_ABBR_TO_FULL[day.strftime('%a').lower()]
         
         mask = (
             (self.calendar_data['start_date'].astype(int) <= day_val) & 
