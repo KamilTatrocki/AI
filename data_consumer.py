@@ -41,8 +41,9 @@ class DataConsumer:
         print("\nFeed Info:")
         print(self.feed_info.head())
 
-        
+main_consumer = DataConsumer()
+
 if __name__ == "__main__":
-    consumer = DataConsumer()
+    consumer = main_consumer
     consumer.load_data()
     consumer.print_info()

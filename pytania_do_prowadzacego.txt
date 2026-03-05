@@ -1,0 +1,1 @@
+1. czas przejazdu jak najmniejszy, to prostu roznica - czas z odjazdu z pierwszego przystanku  i przyjazd na ostatni przystanek? Czy jakos inaczej
