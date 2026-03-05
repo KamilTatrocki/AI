@@ -1,12 +1,39 @@
-from ..data_consumer import main_consumer
+from data_consumer import main_consumer
 from datetime import datetime
 
 class Calendar:
     def __init__(self):
-        self.calendar_data = main_consumer.calendar
-        self.calendar_exception = main_consumer.calendar_dates
-        self.trips_data = main_consumer.trips
+        self._calendar_data = None
+        self._calendar_exception = None
+        self._trips_data = None
         self._day_cache = {}
+
+    def _ensure_loaded(self):
+        """Ładuje dane z main_consumer przy pierwszym użyciu (lazy init)."""
+        if self._calendar_data is None:
+            self._calendar_data = main_consumer.calendar
+            self._calendar_exception = main_consumer.calendar_dates
+            self._trips_data = main_consumer.trips
+            if self._calendar_data is None:
+                raise RuntimeError(
+                    "Dane nie zostały wczytane. Wywołaj main_consumer.load_data() przed użyciem Calendar."
+                )
+
+    @property
+    def calendar_data(self):
+        self._ensure_loaded()
+        return self._calendar_data
+
+    @property
+    def calendar_exception(self):
+        self._ensure_loaded()
+        return self._calendar_exception
+
+    @property
+    def trips_data(self):
+        self._ensure_loaded()
+        return self._trips_data
+
 
     _DAY_ABBR_TO_FULL = {
         'mon': 'monday', 'tue': 'tuesday', 'wed': 'wednesday',
@@ -50,6 +77,13 @@ class Calendar:
             
         return self._day_cache[cache_key]
 
-    def check_if_route_is_active_on_day(self, route_id: str, day: datetime):
+    def check_if_route_is_active_on_day(self, route_id, day: datetime):
         active_routes = self.get_all_active_routes_in_day(day)
-        return route_id in active_routes
+        # active_routes zawiera int-y (z pandas), route_id może być str lub int
+        try:
+            return int(route_id) in active_routes
+        except (ValueError, TypeError):
+            return route_id in active_routes
+
+
+calendar = Calendar()

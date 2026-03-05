@@ -26,14 +26,20 @@ REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 REPO_PARENT = os.path.abspath(os.path.join(REPO_ROOT, ".."))
 PACKAGE_NAME = os.path.basename(REPO_ROOT)  # "AI"
 
+# REPO_PARENT pozwala importować AI.utils.calendar (stary styl)
 if REPO_PARENT not in sys.path:
     sys.path.insert(0, REPO_PARENT)
+
+# REPO_ROOT jest potrzebny bo calendar.py używa: from data_consumer import ...
+if REPO_ROOT not in sys.path:
+    sys.path.insert(0, REPO_ROOT)
 
 dc_module = importlib.import_module(f"{PACKAGE_NAME}.data_consumer")
 DataConsumer = dc_module.DataConsumer
 
 CalendarModule = importlib.import_module(f"{PACKAGE_NAME}.utils.calendar")
 Calendar = CalendarModule.Calendar
+
 
 
 # ---------------------------------------------------------------------------
