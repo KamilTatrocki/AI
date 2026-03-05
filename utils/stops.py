@@ -25,6 +25,10 @@ class Stops:
                 
         return res
 
+
+
+    #private methods
+
     def __calculate_distance_based_on_lan_lat(self, lat1, lat2, lon1, lon2):
         #aproksymacji euklidesowej na rzutowanych współrzednych
         earth_radius = 6371000
@@ -40,4 +44,7 @@ class Stops:
         y = delta_phi
         
         return math.sqrt(x**2 + y**2) * earth_radius
+
+stop = Stops()
+
     
