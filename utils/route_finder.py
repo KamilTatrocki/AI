@@ -15,96 +15,15 @@ class RouteFinder:
         """Zwraca wszystkie stop_id zapisane na dany stop_name"""
         return [stop_id for stop_id, data in self.graph.nodes.items() if data['stop_name'] == name]
 
-    def _initialize_priority_queue(self, start_stops: List[str], start_time_sec: int, criterion: str, counter: itertools.count) -> List[Tuple]:
-        """Inicjalizuje kolejkę priorytetową dla przystanków początkowych"""
-        pq = []
-        for start_stop in start_stops:
-            # Format: (primary_cost, secondary_cost, counter_id, current_time, stop_id, current_trip_id, path)
-            if criterion == 't':
-                heapq.heappush(pq, (start_time_sec, 0, next(counter), start_time_sec, start_stop, None, []))
-            else:
-                heapq.heappush(pq, (0, start_time_sec, next(counter), start_time_sec, start_stop, None, []))
-        return pq
-
-    def _is_state_dominated(self, D: dict, state_key: Tuple, cost1: int, cost2: int) -> bool:
-        """Sprawdza czy stan jest zdominowany przez wcześniej znalezione optymalniejsze dojścia (Pareto frontier)"""
-        if state_key not in D:
-            D[state_key] = []
-            
-        for (c1, c2) in D[state_key]:
-            if c1 <= cost1 and c2 <= cost2:
-                return True
-        return False
-
-    def _update_pareto_front(self, D: dict, state_key: Tuple, cost1: int, cost2: int):
-        """Aktualizuje front Pareto dla danego stanu o nowe, nie zdominowane rozwiązanie"""
-        filtered = [(c1, c2) for (c1, c2) in D[state_key] if not (cost1 <= c1 and cost2 <= c2)]
-        filtered.append((cost1, cost2))
-        D[state_key] = filtered
-
-    def _process_ride_edges(self,
-                            u: str,
-                            current_time: int,
-                            transfers: int,
-                            current_trip,
-                            path: List,
-                            base_date: datetime,
-                            criterion: str,
-                            counter: itertools.count,
-                            pq: List):
-        """Przetwarza krawędzie reprezentujące bezpośrednie przejazdy pojazdem (RIDE)"""
-        for edge in self.graph.adjacency_list.get(u, []):
-            day_idx = current_time // 86400
-            best_dep_time, best_arr_time, best_d_offset = None, None, None
-            
-            # Sprawdź dni od dzisiaj do max 4 dni w przód
-            for d_offset in range(day_idx, day_idx + 4):
-                dep_abs = d_offset * 86400 + edge.departure_time_sec
-                if dep_abs >= current_time:
-                    check_date = base_date + timedelta(days=d_offset)
-                    if self.calendar.check_if_route_is_active_on_day(edge.route_id, check_date):
-                        if best_dep_time is None or dep_abs < best_dep_time:
-                            best_dep_time = dep_abs
-                            # Dla tripów, które lądują po północy, GTFS podaje czasy > 24h
-                            best_arr_time = d_offset * 86400 + edge.arrival_time_sec
-                            best_d_offset = d_offset
-                            
-            if best_dep_time is not None:
-                trip_state = (edge.trip_id, best_d_offset)
-                is_transfer = (current_trip is not None) and (current_trip != trip_state)
-                new_transfers = transfers + (1 if is_transfer else 0)
-                new_path = path + [("RIDE", edge.from_stop, edge.to_stop, edge.route_short_name, best_dep_time, best_arr_time, edge.trip_id)]
-                
-                if criterion == 't':
-                    heapq.heappush(pq, (best_arr_time, new_transfers, next(counter), best_arr_time, edge.to_stop, trip_state, new_path))
-                else:
-                    heapq.heappush(pq, (new_transfers, best_arr_time, next(counter), best_arr_time, edge.to_stop, trip_state, new_path))
-
-    def _process_walk_edges(self,
-                            u: str,
-                            current_time: int,
-                            transfers: int,
-                            current_trip,
-                            path: List,
-                            criterion: str,
-                            counter: itertools.count,
-                            pq: List):
-        """Przetwarza krawędzie reprezentujące przejścia piesze wewnątrz obszaru tego samego przystanku (WALK)"""
-        related_stops = self.graph.get_related_stops_for_transfers(u)
-        for related_stop in related_stops:
-            new_path = path + [("WALK", u, related_stop)]
-            if criterion == 't':
-                heapq.heappush(pq, (current_time, transfers, next(counter), current_time, related_stop, current_trip, new_path))
-            else:
-                heapq.heappush(pq, (transfers, current_time, next(counter), current_time, related_stop, current_trip, new_path))
-
-    def dijkstra(self, stop_A_name: str, stop_B_name: str, start_datetime_str: str, criterion: str = 't') -> Tuple[Optional[List], Optional[int], Optional[int], Optional[datetime]]:
-
+    def dijkstra(self, stop_A_name: str, stop_B_name: str, start_datetime_str: str) -> Tuple[Optional[List], Optional[int], Optional[datetime]]:
+        """
+        Znajduje najkrótszą ścieżkę z A do B minimalizując wyłącznie czas.
+        """
         try:
             start_dt = datetime.strptime(start_datetime_str, "%Y-%m-%d %H:%M")
         except ValueError:
             print("zla data, podaj w dobrym formacie")
-            return None, None, None, None
+            return None, None, None
             
         start_time_sec = start_dt.hour * 3600 + start_dt.minute * 60 + start_dt.second
         base_date = start_dt.replace(hour=0, minute=0, second=0, microsecond=0)
@@ -114,34 +33,62 @@ class RouteFinder:
         
         if not start_stops:
             print(f"Nie znaleziono przystanku początkowego: {stop_A_name}")
-            return None, None, None, None
+            return None, None, None
         if not end_stops:
             print(f"Nie znaleziono przystanku końcowego: {stop_B_name}")
-            return None, None, None, None
+            return None, None, None
 
         end_stops_set = set(end_stops)
         counter = itertools.count()
         
-        pq = self._initialize_priority_queue(start_stops, start_time_sec, criterion, counter)
-        D = {}
+        # Format kolejki: (current_time, counter_id, stop_id, current_trip_id, path)
+        pq = []
+        for start_stop in start_stops:
+            heapq.heappush(pq, (start_time_sec, next(counter), start_stop, None, []))
+            
+        # Słownik odwiedzonych stanów (stop_id, current_trip) -> min_arrival_time
+        visited_times = {}
         
         while pq:
-            cost1, cost2, _, current_time, u, current_trip, path = heapq.heappop(pq)
-            transfers = cost2 if criterion == 't' else cost1
+            current_time, _, u, current_trip, path = heapq.heappop(pq)
             state_key = (u, current_trip)
             
-            if self._is_state_dominated(D, state_key, cost1, cost2):
+            # Jeśli byliśmy tu już wcześniej o lepszym (wcześniejszym) lub równym czasie, pomijamy
+            if state_key in visited_times and visited_times[state_key] <= current_time:
                 continue
-                
-            self._update_pareto_front(D, state_key, cost1, cost2)
+            visited_times[state_key] = current_time
             
             if u in end_stops_set:
-                return path, current_time, transfers, base_date
+                return path, current_time, base_date
                 
-            self._process_ride_edges(u, current_time, transfers, current_trip, path, base_date, criterion, counter, pq)
-            self._process_walk_edges(u, current_time, transfers, current_trip, path, criterion, counter, pq)
+            # 1. Przetwarzanie bezpośrednich przejazdów (RIDE)
+            for edge in self.graph.adjacency_list.get(u, []):
+                day_idx = current_time // 86400
+                best_dep_time, best_arr_time, best_d_offset = None, None, None
+                
+                # Sprawdź od dzisiaj do max 4 dni w przód (zabezpieczenie weekendowe)
+                for d_offset in range(day_idx, day_idx + 4):
+                    dep_abs = d_offset * 86400 + edge.departure_time_sec
+                    if dep_abs >= current_time:
+                        check_date = base_date + timedelta(days=d_offset)
+                        if self.calendar.check_if_route_is_active_on_day(edge.route_id, check_date):
+                            if best_dep_time is None or dep_abs < best_dep_time:
+                                best_dep_time = dep_abs
+                                best_arr_time = d_offset * 86400 + edge.arrival_time_sec
+                                best_d_offset = d_offset
+                                
+                if best_dep_time is not None:
+                    trip_state = (edge.trip_id, best_d_offset)
+                    new_path = path + [("RIDE", edge.from_stop, edge.to_stop, edge.route_short_name, best_dep_time, best_arr_time, edge.trip_id)]
+                    heapq.heappush(pq, (best_arr_time, next(counter), edge.to_stop, trip_state, new_path))
 
-        return None, None, None, None
+            # 2. Przetwarzanie przejść pieszych wewnątrz rozbudowanych stacji (WALK)
+            related_stops = self.graph.get_related_stops_for_transfers(u)
+            for related_stop in related_stops:
+                new_path = path + [("WALK", u, related_stop)]
+                heapq.heappush(pq, (current_time, next(counter), related_stop, current_trip, new_path))
+
+        return None, None, None
 
     @staticmethod
     def format_time(seconds: int, base_date: datetime = None) -> str:
@@ -160,13 +107,13 @@ class RouteFinder:
             
         return time_str
 
-    def print_route(self, path: List, arrival_time: int, transfers: int, base_date: datetime):
+    def print_route(self, path: List, arrival_time: int, base_date: datetime):
         """Wypisuje sformatowaną trasę przejazdu"""
         if not path:
-            print("Nie znaleziono trasy dopasowanej do podanych kryteriów.")
+            print("Nie znaleziono trasy dopasowanej do podanych kryteriów i daty.")
             return
 
-        print(f"Znaleziono trasę! Czas przyjazdu na miejsce: {self.format_time(arrival_time, base_date)}, Liczba przesiadek: {transfers}")
+        print(f"Znaleziono trasę! Najszybszy czas przyjazdu na miejsce: {self.format_time(arrival_time, base_date)}")
         print("Trasa:")
         for step in path:
             if step[0] == "RIDE":
@@ -177,5 +124,6 @@ class RouteFinder:
                 stop_B = self.graph.nodes[t]['stop_name']
                 print(f"  [{dep_str} - {arr_str}] {stop_A} -> {stop_B} [Linia {route}]")
             elif step[0] == "WALK":
-                # Przejścia wewnątrz peronów na stacji
+                print(f"  [WALK] {step[1]} -> {step[2]} (przejście wewnątrz stacji)")
+                # Debugging - przejścia wewnątrz peronów na stacji
                 pass 
