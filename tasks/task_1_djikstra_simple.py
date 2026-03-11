@@ -1,0 +1,34 @@
+"""
+Wersja wykorzystująca uproszczoną klasę RouteFinderSimple optymalizującą
+wyłącznie najszybszy czas przyjazdu (bez wgłębiania się w przesiadki).
+"""
+import sys
+import os
+
+# Dadaj główny folder projektu do sys.path żeby importy z utils działały poprawnie
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from utils.graph import Graph
+from utils.route_finder_simple import RouteFinderSimple
+from data_consumer import main_consumer
+
+
+if __name__ == "__main__":
+    """
+    uv run tasks/task_1_djikstra_simple.py
+    """
+    
+    main_consumer.load_data()
+    graph = Graph(main_consumer)
+    
+    # inputy
+    A = "Sobótka"   
+    B = "Zgorzelec"
+    start_time_str = "2026-03-11 21:00" # czas rozpoczęcia podróży
+    
+    print(f"Szukanie trasy z '{A}' do '{B}' (Tylko optymalizacja czasu przejazdu, Start: {start_time_str})")
+    print("-" * 50)
+    
+    route_finder = RouteFinderSimple(graph)
+    path, arrival_time, base_date = route_finder.dijkstra(A, B, start_time_str)
+    route_finder.print_route(path, arrival_time, base_date)
