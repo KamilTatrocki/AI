@@ -1,4 +1,4 @@
-from ..data_consumer import main_consumer
+from data_consumer import main_consumer
 from datetime import datetime
 
 class Calendar:

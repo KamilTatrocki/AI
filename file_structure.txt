@@ -1,0 +1,117 @@
+3.1 agency.txt – Informacje o przewo ́zniku
+Zawiera metadane dotycz  ̨ace operatora transportowego. W tym zbiorze danych wyst  ̨epuje jeden przewo ́znik:
+Koleje Dolno ́sl  ̨askie (identyfikator agencji: 279).
+• agency_id – unikalny identyfikator przewo ́znika
+• agency_name – pełna nazwa przewo ́znika
+• agency_url – adres URL strony internetowej przewo ́znika
+• agency_timezone – strefa czasowa, w której działa przewo ́znik (np. Europe/Warsaw)
+• agency_phone – numer telefonu kontaktowego
+• agency_email – adres e-mail kontaktowy
+• agency_fare_url – adres URL do zakupu biletów
+3.2 routes.txt – Definicje tras (57 tras)
+Definiuje trasy (linie) obsługiwane przez przewo ́znika. Ka ̇zda trasa odpowiada nazwanej linii kolejowej (np.
+D1, D10, D66). Pojedyncza trasa mo ̇ze mie ́c wiele kursów realizowanych o ró ̇znych porach i w ró ̇zne dni.
+• route_id – unikalny identyfikator trasy
+• agency_id – odwołanie do przewo ́znika obsługuj  ̨acego tras  ̨e (klucz obcy do agency.txt)
+• route_short_name – krótka, publiczna nazwa trasy (np. D1, D66)
+• route_long_name – dłu ̇zsza opisowa nazwa trasy (u ̇zywana, gdy route_short_name jest puste, np.
+KD Premium Nadmorski)
+• route_type – typ transportu; warto ́s ́c 2 oznacza kolej
+• route_color – heksadecymalny kod koloru do wy ́swietlania trasy (np. F6C32F)
+• route_text_color – heksadecymalny kolor tekstu dla etykiet na tle koloru trasy
+3.3 stops.txt – Lokalizacje przystanków (1 108 wpisów)
+Opisuje wszystkie przystanki (stacje i perony) w sieci. Ka ̇zdy przystanek posiada współrz ̨edne geogra-
+ficzne w układzie WGS84 i mo ̇ze reprezentowa ́c stacj  ̨e nadrz ̨edn  ̨a (location_type = 1) lub konkretny peron
+w obr  ̨ebie stacji (location_type = 0). Wpisy peronów odwołuj  ̨a si  ̨e do stacji nadrz ̨ednej za pomoc  ̨a pola
+parent_station.
+• stop_id – unikalny identyfikator przystanku lub peronu
+• stop_code – publiczny kod przystanku (mo ̇ze by ́c pusty dla peronów)
+• stop_name – czytelna dla człowieka nazwa przystanku (np. Wrocław Główny, Jelenia Góra)
+• stop_desc – opcjonalny tekstowy opis przystanku
+• stop_lat – szeroko ́s ́c geograficzna przystanku w układzie współrz ̨ednych WGS84
+• stop_lon – długo ́s ́c geograficzna przystanku w układzie współrz ̨ednych WGS84
+• location_type – 0 = peron/przystanek, 1 = stacja nadrz ̨edna
+• parent_station – stop_id stacji nadrz ̨ednej (puste dla samych stacji nadrz ̨ednych)
+• platform_code – oznaczenie peronu w obr  ̨ebie stacji (np. II, 3)
+6
+
+trips.txt – Definicje kursów (3 260 kursów)
+Definiuje poszczególne kursy, tj. konkretne przejazdy pojazdu po danej trasie o okre ́slonym czasie. Ka ̇zdy
+kurs nale ̇zy do dokładnie jednej trasy i jednego wzorca kursowania (okre ́slaj  ̨acego dni, w których kurs jest
+realizowany).
+• route_id – odwołanie do trasy, do której nale ̇zy kurs (klucz obcy do routes.txt)
+• service_id – odwołanie do kalendarza kursowania okre ́slaj  ̨acego, kiedy kurs jest realizowany (klucz
+obcy do calendar.txt / calendar_dates.txt)
+• trip_id – unikalny identyfikator kursu
+• trip_headsign – tekst wy ́swietlany na tablicy kierunkowej pojazdu (np. Sędzisław, Wrocław Główny)
+• direction_id – binarny wska ́znik kierunku (0 lub 1) rozró ̇zniaj  ̨acy kursy w obu kierunkach na tej
+samej trasie
+• block_id – identyfikuje blok pojazdu, umo ̇zliwiaj  ̨ac powi  ̨azanie kolejnych kursów obsługiwanych przez
+ten sam pojazd
+3.5 stop_times.txt – Czasy na przystankach (48 727 wpisów)
+Najwi  ̨ekszy plik w zbiorze danych. Zawiera czas przyjazdu i odjazdu ka ̇zdego kursu na ka ̇zdym obsługiwanym
+przystanku, definiuj  ̨ac dokładn  ̨a kolejno ́s ́c i rozkład czasowy przystanków w ramach ka ̇zdego kursu. Jest to
+główny plik słu ̇z  ̨acy do konstrukcji grafu poł  ̨acze  ́n.
+• trip_id – odwołanie do kursu (klucz obcy do trips.txt)
+• arrival_time – planowany czas przyjazdu na przystanek, w formacie HH:MM:SS. Uwaga: warto ́sci
+mog  ̨a przekracza ́c 23:59:59 dla kursów realizowanych po północy (np. 25:10:00 oznacza 01:10 na-
+st  ̨epnego dnia)
+• departure_time – planowany czas odjazdu z przystanku, w formacie HH:MM:SS (ta sama konwencja
+przekroczenia jak w arrival_time)
+• stop_id – odwołanie do obsługiwanego przystanku (klucz obcy do stops.txt)
+• stop_sequence – nieujemna liczba całkowita okre ́slaj  ̨aca kolejno ́s ́c przystanków w ramach kursu (za-
+czyna si  ̨e od 0)
+• stop_headsign – opcjonalne nadpisanie tablicy kierunkowej kursu na tym przystanku
+• pickup_type – wskazuje, czy pasa ̇zerowie mog  ̨a wsi  ̨a ́s ́c na tym przystanku: 0 = regularne wsiadanie,
+1 = wsiadanie niedost  ̨epne
+• shape_dist_traveled – odległo ́s ́c przebyta wzdłu ̇z kształtu trasy do tego przystanku (mo ̇ze by ́c pu-
+ste)
+3.6 calendar.txt – Kalendarze kursowania (3 260 wpisów)
+Definiuje regularne tygodniowe wzorce kursowania. Ka ̇zdy wpis okre ́sla, w które dni tygodnia dany service_id
+jest aktywny, wraz z okresem wa ̇zno ́sci (daty pocz  ̨atkowa i ko  ́ncowa w formacie RRRRMMDD).
+• service_id – unikalny identyfikator wzorca kursowania
+• monday . . . sunday – flagi binarne (0 lub 1) wskazuj  ̨ace, czy kurs jest realizowany w danym dniu
+tygodnia
+• start_date – pierwszy dzie  ́n okresu wa ̇zno ́sci kursowania, w formacie RRRRMMDD
+• end_date – ostatni dzie  ́n okresu wa ̇zno ́sci kursowania, w formacie RRRRMMDD
+
+calendar_dates.txt – Wyj  ̨atki w kursowaniu (5 549 wpisów)
+Definiuje dodanie lub usuni  ̨ecie kursów w konkretnych datach. Plik ten nadpisuje tygodniowe wzorce z
+calendar.txt w okre ́slone dni (np.  ́swi  ̨eta pa  ́nstwowe, wydarzenia specjalne).
+• service_id – odwołanie do modyfikowanego wzorca kursowania
+• date – konkretna data wyj  ̨atku, w formacie RRRRMMDD
+• exception_type – 1 = kurs dodany w tym dniu, 2 = kurs usuni  ̨ety w tym dniu
+3.8 feed_info.txt – Metadane kanału danych
+Zawiera metadane dotycz  ̨ace samego kanału GTFS, w tym wydawc  ̨e i okres wa ̇zno ́sci zbioru danych.
+• feed_publisher_name – nazwa wydawcy kanału (kiedyPrzyjedzie.pl)
+• feed_publisher_url – adres URL strony wydawcy
+• feed_lang – j  ̨ezyk kanału (pl)
+• feed_start_date – pierwszy dzie  ́n, dla którego dane kanału s  ̨a wa ̇zne (20260303)
+• feed_end_date – ostatni dzie  ́n, dla którego dane kanału s  ̨a wa ̇zne (20261212)
+3.9 Konstruowanie grafu poł  ̨acze  ́n
+Aby wykorzysta ́c dostarczone dane GTFS do wyszukiwania  ́scie ̇zek, student musi skonstruowa ́c skierowany
+graf zale ̇zny od czasu. Poni ̇zsze wytyczne opisuj  ̨a wzajemne powi  ̨azania plików oraz sposób tworzenia kra-
+w  ̨edzi:
+1. Wierzchołki. Ka ̇zdy wierzchołek grafu reprezentuje przystanek (lub peron) zdefiniowany w stops.txt.
+Współrz ̨edne geograficzne (stop_lat, stop_lon) mog  ̨a by ́c wykorzystane do obliczenia heurystycz-
+nych estymacji odległo ́sci dla algorytmu A* (np. za pomoc  ̨a wzoru haversine lub aproksymacji euklide-
+sowej na rzutowanych współrz ̨ednych).
+2. Kraw  ̨edzie kursów (poł  ̨aczenia bezpo  ́srednie). Kraw  ̨ed ́z skierowana istnieje mi  ̨edzy dwoma kolej-
+nymi przystankami w ramach tego samego kursu. Dla ka ̇zdego kursu w trips.txt plik stop_times.txt
+dostarcza uporz  ̨adkowan  ̨a sekwencj  ̨e przystanków (posortowan  ̨a po stop_sequence). Dla kolejnych
+wpisów (i, i + 1) w tej sekwencji nale ̇zy utworzy ́c kraw  ̨ed ́z od stop_idi do stop_idi+1 z:
+• czas odjazdu = departure_timei
+• czas przyjazdu = arrival_timei+1
+• czas przejazdu = arrival_timei+1 − departure_timei
+• nazwa linii = route_short_name (lub route_long_name, je ́sli krótka nazwa jest pusta), uzyskana
+poprzez zł  ̨aczenie trips.txt → routes.txt
+3. Kraw  ̨edzie przesiadkowe. Gdy pasa ̇zer przesiada si  ̨e z jednej linii na drug  ̨a na tej samej stacji, nast  ̨e-
+puje przesiadka. Przesiadki powinny by ́c modelowane przez ł  ̨aczenie przystanków, które maj  ̨a t  ̨e sam  ̨a
+parent_station (lub ten sam stop_id, je ́sli hierarchia nadrz ̨edny–podrz ̨edny nie istnieje). Przesiadka
+wi  ̨a ̇ze si  ̨e z czasem oczekiwania (ró ̇znica mi  ̨edzy czasem przyjazdu pierwszego kursu a czasem od-
+jazdu nast  ̨epnego kursu na tej samej stacji) oraz zwi  ̨eksza licznik przesiadek o jeden.
+4. Filtrowanie dni kursowania. Nie wszystkie kursy realizowane s  ̨a codziennie. Aby ustali ́c, czy kurs o
+danym service_id jest aktywny w okre ́slonym dniu, nale ̇zy poł  ̨aczy ́c tygodniowy rozkład z calendar.txt
+z wyj  ̨atkami z calendar_dates.txt. Aplikacja studenta powinna przyjmowa ́c dat  ̨e pocz  ̨atkow  ̨a (lub
+u ̇zywa ́c domy ́slnej daty w okresie wa ̇zno ́sci) i uwzgl  ̨ednia ́c tylko kursy aktywne w danym dniu.
+8
