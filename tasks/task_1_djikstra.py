@@ -24,6 +24,11 @@ if __name__ == "__main__":
     A = "Sobótka"   
     B = "Zgorzelec"
     start_time_str = "2026-03-11 21:00" # czas rozpoczęcia podróży
+
+    #inne
+    A= "Forst (Lausitz)"
+    B= "Jerzmanki"
+    start_time_str = "2026-03-08 8:00"
     
     print(f"Szukanie trasy z '{A}' do '{B}' (Tylko optymalizacja czasu przejazdu, Start: {start_time_str})")
     print("-" * 50)
