@@ -3,8 +3,8 @@ import itertools
 from datetime import datetime, timedelta
 from typing import List, Tuple, Optional
 
-from .graph import Graph
-from .calendar import Calendar
+from utils.graph import Graph
+from utils.calendar import Calendar
 
 class RouteFinder:
     def __init__(self, graph: Graph):
