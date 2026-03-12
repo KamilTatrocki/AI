@@ -41,19 +41,19 @@ class RouteFinder:
         end_stops_set = set(end_stops)
         counter = itertools.count()
         
-        # Format kolejki: (current_time, counter_id, stop_id, current_trip_id, path)
+        # (current_time, counter_id, stop_id, current_trip_id, path)
         pq = []
         for start_stop in start_stops:
             heapq.heappush(pq, (start_time_sec, next(counter), start_stop, None, []))
             
-        # Słownik odwiedzonych stanów (stop_id, current_trip) -> min_arrival_time
+        # (stop_id, current_trip) -> min_arrival_time
         visited_times = {}
         
         while pq:
             current_time, _, u, current_trip, path = heapq.heappop(pq)
             state_key = (u, current_trip)
             
-            # Jeśli byliśmy tu już wcześniej o lepszym (wcześniejszym) lub równym czasie, pomijamy
+            
             if state_key in visited_times and visited_times[state_key] <= current_time:
                 continue
             visited_times[state_key] = current_time
@@ -61,13 +61,13 @@ class RouteFinder:
             if u in end_stops_set:
                 return path, current_time, base_date
                 
-            # 1. Przetwarzanie bezpośrednich przejazdów (RIDE)
+            
             for edge in self.graph.adjacency_list.get(u, []):
                 day_idx = current_time // 86400
                 best_dep_time, best_arr_time, best_d_offset = None, None, None
                 
-                # Sprawdź od dzisiaj do max 4 dni w przód (zabezpieczenie weekendowe)
-                for d_offset in range(day_idx, day_idx + 4):
+                
+                for d_offset in range(day_idx, day_idx + 1): #1 dzien do przodu patrze
                     dep_abs = d_offset * 86400 + edge.departure_time_sec
                     if dep_abs >= current_time:
                         check_date = base_date + timedelta(days=d_offset)
@@ -82,7 +82,7 @@ class RouteFinder:
                     new_path = path + [("RIDE", edge.from_stop, edge.to_stop, edge.route_short_name, best_dep_time, best_arr_time, edge.trip_id)]
                     heapq.heappush(pq, (best_arr_time, next(counter), edge.to_stop, trip_state, new_path))
 
-            # 2. Przetwarzanie przejść pieszych wewnątrz rozbudowanych stacji (WALK)
+            # przejscie po peronkach
             related_stops = self.graph.get_related_stops_for_transfers(u)
             for related_stop in related_stops:
                 new_path = path + [("WALK", u, related_stop)]
@@ -125,5 +125,4 @@ class RouteFinder:
                 print(f"  [{dep_str} - {arr_str}] {stop_A} -> {stop_B} [Linia {route}]")
             elif step[0] == "WALK":
                 print(f"  [WALK] {step[1]} -> {step[2]} (przejście wewnątrz stacji)")
-                # Debugging - przejścia wewnątrz peronów na stacji
                 pass 

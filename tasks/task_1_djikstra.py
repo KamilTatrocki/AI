@@ -5,7 +5,6 @@ wyłącznie najszybszy czas przyjazdu (bez wgłębiania się w przesiadki).
 import sys
 import os
 
-# Dadaj główny folder projektu do sys.path żeby importy z utils działały poprawnie
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from utils.graph import Graph
