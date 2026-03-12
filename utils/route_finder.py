@@ -206,6 +206,7 @@ class RouteFinder:
             # przejścia po peronkach
             related_stops = self.graph.get_related_stops_for_transfers(u)
             for related_stop in related_stops:
+
                 new_path = path + [("WALK", u, related_stop)]
                 h_val = self._heuristic(related_stop, end_stops_set, criterion)
                 new_f = current_cost + h_val
