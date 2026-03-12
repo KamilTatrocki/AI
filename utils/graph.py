@@ -120,14 +120,4 @@ class Graph:
         transfers = [s for s in self.parent_station_map[parent] if s != stop_id]
         return transfers
         
-    def get_active_edges_for_stop(self, stop_id, day, calendar: Calendar):
-        """
-        4. Filtrowanie dni kursowania.
-        Dla danego przystanku zawraca logikę połączeń względem trasy, z której linia (kurs)
-        realizowana jest w analizowanym dniu (check_if_route_is_active_on_day).
-        """
-        active_edges = []
-        for edge in self.adjacency_list.get(stop_id, []):
-            if calendar.check_if_route_is_active_on_day(edge.route_id, day):
-                active_edges.append(edge)
-        return active_edges
+ 
