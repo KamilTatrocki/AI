@@ -92,8 +92,37 @@ class RouteFinder:
 
     def _heuristic(self, curr_stop: str, end_stops_set: set, criterion: str) -> float:
         if criterion == 'p':
+            return self._heuristic_p(curr_stop, end_stops_set)
+        return self._heuristic_t(curr_stop, end_stops_set)
+
+    def _build_routes_per_stop(self):
+        if hasattr(self, '_routes_per_stop'):
+            return
+        self._routes_per_stop = {}
+        for u, edges in self.graph.adjacency_list.items():
+            if u not in self._routes_per_stop:
+                self._routes_per_stop[u] = set()
+            for e in edges:
+                self._routes_per_stop[u].add(e.route_id)
+                #gdyby byla stacja do ktorej mozna tylko przyjechac ale nie mozna z niej odjechac to 3 linie ponizej bylyby potrzebne
+                # if e.to_stop not in self._routes_per_stop:
+                #     self._routes_per_stop[e.to_stop] = set()
+                # self._routes_per_stop[e.to_stop].add(e.route_id)
+
+    def _heuristic_p(self, curr_stop: str, end_stops_set: set) -> float:
+        if curr_stop in end_stops_set:
             return 0.0
             
+        self._build_routes_per_stop()
+        curr_routes = self._routes_per_stop.get(curr_stop, set())
+        
+        for end_stop in end_stops_set:
+            if curr_routes.intersection(self._routes_per_stop.get(end_stop, set())):
+                return 0.0
+                
+        return 1.0
+
+    def _heuristic_t(self, curr_stop: str, end_stops_set: set) -> float:
         min_dist = float('inf')
         lat1 = self.graph.nodes[curr_stop]['stop_lat']
         lon1 = self.graph.nodes[curr_stop]['stop_lon']

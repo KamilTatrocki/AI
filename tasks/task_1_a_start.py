@@ -38,11 +38,11 @@ if __name__ == "__main__":
     main_consumer.load_data()
     graph = Graph(main_consumer)
     
-    criteria = "t" # Zmień na "p" by testować przesiadki
+    criteria = "p" # t - czas lub p - przesiadki
     start_time_str = "2026-03-11 21:00"
 
     A = "Sobótka"   
-    B = "Sobótka Zachodnia"
+    B = "Zgorzelec"
 
     #inne
     # A= "Forst (Lausitz)"
