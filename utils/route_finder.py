@@ -71,7 +71,7 @@ class RouteFinder:
                     dep_abs = d_offset * 86400 + edge.departure_time_sec
                     if dep_abs >= current_time:
                         check_date = base_date + timedelta(days=d_offset)
-                        if self.calendar.check_if_route_is_active_on_day(edge.route_id, check_date):
+                        if self.calendar.check_if_service_is_active_on_day(edge.service_id, check_date):
                             if best_dep_time is None or dep_abs < best_dep_time:
                                 best_dep_time = dep_abs
                                 best_arr_time = d_offset * 86400 + edge.arrival_time_sec
@@ -211,7 +211,7 @@ class RouteFinder:
                     dep_abs = d_offset * 86400 + edge.departure_time_sec
                     if dep_abs >= current_time:
                         check_date = base_date + timedelta(days=d_offset)
-                        if self.calendar.check_if_route_is_active_on_day(edge.route_id, check_date):
+                        if self.calendar.check_if_service_is_active_on_day(edge.service_id, check_date):
                             if best_dep_time is None or dep_abs < best_dep_time:
                                 best_dep_time = dep_abs
                                 best_arr_time = d_offset * 86400 + edge.arrival_time_sec
