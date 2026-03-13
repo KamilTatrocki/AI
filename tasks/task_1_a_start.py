@@ -53,9 +53,9 @@ if __name__ == "__main__":
 
     # A = "Sobótka"   
     # B = "Smolec"
-    # A = "Sobótka"   
-    # B = "Zgorzelec"
-    # start_time_str = "2026-03-15 21:00" # czas rozpoczęcia podróży
+    A = "Sobótka"   
+    B = "Zgorzelec"
+    start_time_str = "2026-03-15 21:00" # czas rozpoczęcia podróży
    
     
     route_finder = RouteFinder(graph)
@@ -63,7 +63,8 @@ if __name__ == "__main__":
     print(f"Rozpoczęcie szukania A*: {A} -> {B} (Kryterium: {criteria}, Start: {start_time_str})")
     
     start_eval_time = time.time()
-    path, arrival_time, base_date = route_finder.a_star(A, B, start_time_str, criterion=criteria)
+    upgraded_heuristic_flag = True
+    path, arrival_time, base_date = route_finder.a_star(A, B, start_time_str, criterion=criteria, upgraded_heuristic=upgraded_heuristic_flag)
     eval_time = time.time() - start_eval_time
     
     if path:

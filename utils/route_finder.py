@@ -90,8 +90,10 @@ class RouteFinder:
 
         return None, None, None
 
-    def _heuristic(self, curr_stop: str, end_stops_set: set, criterion: str) -> float:
+    def _heuristic(self, curr_stop: str, end_stops_set: set, criterion: str, upgraded_heuristic: bool = False) -> float:
         if criterion == 'p':
+            if upgraded_heuristic:
+                return self._heuristic_p_upgraded(curr_stop, end_stops_set)
             return self._heuristic_p(curr_stop, end_stops_set)
         return self._heuristic_t(curr_stop, end_stops_set)
 
@@ -121,6 +123,42 @@ class RouteFinder:
                 return 0.0
                 
         return 1.0
+
+    def _build_hub_data(self):
+        if hasattr(self, '_hub_connected_routes'):
+            return
+        self._build_routes_per_stop()
+        self._major_hubs = {stop_id for stop_id, r in self._routes_per_stop.items() if len(r) > 4}
+        
+        self._hub_connected_routes = {}
+        for hub in self._major_hubs:
+            hub_routes = self._routes_per_stop[hub]
+            for r in hub_routes:
+                if r not in self._hub_connected_routes:
+                    self._hub_connected_routes[r] = set()
+                self._hub_connected_routes[r].update(hub_routes)
+
+    def _heuristic_p_upgraded(self, curr_stop: str, end_stops_set: set) -> float:
+        if curr_stop in end_stops_set:
+            return 0.0
+            
+        self._build_hub_data()
+        curr_routes = self._routes_per_stop.get(curr_stop, set())
+        if not curr_routes:
+            return 2.0
+            
+        end_routes = set()
+        for end_stop in end_stops_set:
+            end_routes.update(self._routes_per_stop.get(end_stop, set()))
+            
+        if curr_routes.intersection(end_routes):
+            return 0.0
+            
+        for r in curr_routes:
+            if self._hub_connected_routes.get(r, set()).intersection(end_routes):
+                return 1.0
+                
+        return 2.0
 
     def _heuristic_t(self, curr_stop: str, end_stops_set: set) -> float:
         min_dist = float('inf')
@@ -153,7 +191,7 @@ class RouteFinder:
         # 50 m/s ~ 180 km/h 
         return min_dist / 50.0
 
-    def a_star(self, stop_A_name: str, stop_B_name: str, start_datetime_str: str, criterion: str = 't') -> Tuple[Optional[List], Optional[int], Optional[datetime]]:
+    def a_star(self, stop_A_name: str, stop_B_name: str, start_datetime_str: str, criterion: str = 't', upgraded_heuristic: bool = False) -> Tuple[Optional[List], Optional[int], Optional[datetime]]:
         """
         Znajduje najkrótszą ścieżkę z A do B używając algorytmu A*.
         criterion: 't' - minimalizacja czasu przejazdu
@@ -184,7 +222,7 @@ class RouteFinder:
         # Priority queue z elementami: (f_score, current_cost, current_time, counter_id, stop_id, current_trip, path)
         pq = []
         for start_stop in start_stops:
-            h = self._heuristic(start_stop, end_stops_set, criterion)
+            h = self._heuristic(start_stop, end_stops_set, criterion, upgraded_heuristic)
             # Na start oba koszty to 0
             heapq.heappush(pq, (h, 0, start_time_sec, next(counter), start_stop, None, []))
             
@@ -226,7 +264,7 @@ class RouteFinder:
                         is_transfer = 1 if (current_trip is not None and current_trip[0] != edge.trip_id) else 0
                         new_cost = current_cost + is_transfer
                         
-                    h_val = self._heuristic(edge.to_stop, end_stops_set, criterion)
+                    h_val = self._heuristic(edge.to_stop, end_stops_set, criterion, upgraded_heuristic)
                     new_f = new_cost + h_val
                     
                     new_path = path + [("RIDE", edge.from_stop, edge.to_stop, edge.route_short_name, best_dep_time, best_arr_time, edge.trip_id)]
@@ -237,7 +275,7 @@ class RouteFinder:
             for related_stop in related_stops:
 
                 new_path = path + [("WALK", u, related_stop)]
-                h_val = self._heuristic(related_stop, end_stops_set, criterion)
+                h_val = self._heuristic(related_stop, end_stops_set, criterion, upgraded_heuristic)
                 new_f = current_cost + h_val
                 
                 heapq.heappush(pq, (new_f, current_cost, current_time, next(counter), related_stop, current_trip, new_path))
