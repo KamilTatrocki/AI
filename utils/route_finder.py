@@ -257,7 +257,7 @@ class RouteFinder:
         self._build_hub_data()
         curr_routes = self._routes_per_stop.get(curr_stop, set())
         if not curr_routes:
-            return 2.0
+            return 1.0
             
         end_routes = set()
         for end_stop in end_stops_set:
@@ -268,9 +268,9 @@ class RouteFinder:
             
         for r in curr_routes:
             if self._hub_connected_routes.get(r, set()).intersection(end_routes):
-                return 1.0
+                return 0.5
                 
-        return 2.0
+        return 1.0
 
     def _heuristic_t(self, curr_stop: str, end_stops_set: set) -> float:
         min_dist = float('inf')
