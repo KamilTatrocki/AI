@@ -237,13 +237,14 @@ class RouteFinder:
         self._build_routes_per_stop()
         
         self._station_routes = defaultdict(set)
-        #cel - _station_routes = przystanki ktore sa z max 1 przesiadka
+        #powstanie _station_routes {przystanek: {linie z max 1 przesiadka}}
         for stop_id, routes in self._routes_per_stop.items():
             self._station_routes[stop_id].update(routes)
             for related in self.graph.get_related_stops_for_transfers(stop_id):
                 self._station_routes[stop_id].update(self._routes_per_stop.get(related, set()))
                 
         self._route_neighbors = defaultdict(set)
+        #powstanie _route_neighbors {linia: {linie z max 1 przesiadka}}
         for stop_id, routes in self._station_routes.items():
             for r in routes:
                 self._route_neighbors[r].update(routes)
