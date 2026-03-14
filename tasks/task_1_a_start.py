@@ -24,6 +24,7 @@ import os
 import time
 from datetime import datetime
 
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from utils.graph import Graph
@@ -40,13 +41,13 @@ if __name__ == "__main__":
     criteria = "p" # t - czas lub p - przesiadki
     start_time_str = "2026-03-15 14:00"
 
-    B = "Zduny"   
-    A = "Lubawka"
+    # B = "Zduny"   
+    # A = "Lubawka"
 
     #inne
-    # A= "Forst (Lausitz)"
-    # B= "Jerzmanki"
-    start_time_str = "2026-03-11 8:00"
+    A= "Forst (Lausitz)"
+    B= "Jerzmanki"
+    start_time_str = "2026-03-08 8:00"
 
     # start_time_str = "2026-03-11 13:00"
 

@@ -5,7 +5,8 @@ przesiadki
 0 - wspolna linia
 1 - brak wspolnej linii
 
-przesiadki porach
-0 wspolna linia
-1 wspolna linia z duza stacja
-2 pozostale warunki
+
+LEPSZA
+0.0 - jeśli dany peron (i jemu pokrewne) ma bezpośrednią linię do celu.
+1.0 - jeśli jedna z naszych linii na tym peronie krzyżuje się gdziekolwiek na wspólnej trasie z jedną z linii dot. stacji docelowej (czyli gwarantowana jest trasa z jedną przesiadką).
+2.0 - "wypadek domyślny", w którym do złączenia tras wymagane są co najmniej 2 przesiadki na hubach.
