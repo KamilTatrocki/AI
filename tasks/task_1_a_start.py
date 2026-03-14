@@ -49,13 +49,13 @@ if __name__ == "__main__":
     # B= "Jerzmanki"
     # start_time_str = "2026-03-08 5:00"
 
-    # start_time_str = "2026-03-10 08:00"
+    start_time_str = "2026-03-11 14:00"
 
     # A = "Sobótka"   
     # B = "Smolec"
-    A = "Sobótka"   
-    B = "Zgorzelec"
-    start_time_str = "2026-03-15 21:00" # czas rozpoczęcia podróży
+    A = "Wrocław Główny"   
+    B = "Sobótka"
+    # start_time_str = "2026-03-15 21:00" # czas rozpoczęcia podróży
    
     
     route_finder = RouteFinder(graph)

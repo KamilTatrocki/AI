@@ -15,6 +15,97 @@ class RouteFinder:
         """Zwraca wszystkie stop_id zapisane na dany stop_name"""
         return [stop_id for stop_id, data in self.graph.nodes.items() if data['stop_name'] == name]
 
+    def a_star(self, stop_A_name: str, stop_B_name: str, start_datetime_str: str, criterion: str = 't', upgraded_heuristic: bool = False) -> Tuple[Optional[List], Optional[int], Optional[datetime]]:
+        """
+        Znajduje najkrótszą ścieżkę z A do B używając algorytmu A*.
+        criterion: 't' - minimalizacja czasu przejazdu
+                   'p' - minimalizacja liczby przesiadek
+        """
+        try:
+            start_dt = datetime.strptime(start_datetime_str, "%Y-%m-%d %H:%M")
+        except ValueError:
+            print("zla data, podaj w dobrym formacie")
+            return None, None, None
+            
+        start_time_sec = start_dt.hour * 3600 + start_dt.minute * 60 + start_dt.second
+        base_date = start_dt.replace(hour=0, minute=0, second=0, microsecond=0)
+        
+        start_stops = self.find_stop_ids_by_name(stop_A_name)
+        end_stops = self.find_stop_ids_by_name(stop_B_name)
+        
+        if not start_stops:
+            print(f"Nie znaleziono przystanku początkowego: {stop_A_name}")
+            return None, None, None
+        if not end_stops:
+            print(f"Nie znaleziono przystanku końcowego: {stop_B_name}")
+            return None, None, None
+
+        end_stops_set = set(end_stops)
+        counter = itertools.count()
+        
+        # Priority queue z elementami: (f_score, current_cost, current_time, counter_id, stop_id, current_trip, path)
+        pq = []
+        for start_stop in start_stops:
+            h = self._heuristic(start_stop, end_stops_set, criterion, upgraded_heuristic)
+            # Na start oba koszty to 0
+            heapq.heappush(pq, (h, 0, start_time_sec, next(counter), start_stop, None, []))
+            
+        # visited states: state_key -> min_cost
+        visited_states = {}
+        
+        while pq:
+            f, current_cost, current_time, _, u, current_trip, path = heapq.heappop(pq)
+            state_key = (u, current_trip)
+            
+            if state_key in visited_states and visited_states[state_key] <= current_cost:
+                continue
+            visited_states[state_key] = current_cost
+            
+            if u in end_stops_set:
+                return path, current_time, base_date
+                
+            for edge in self.graph.adjacency_list.get(u, []):
+                day_idx = current_time // 86400
+                best_dep_time, best_arr_time, best_d_offset = None, None, None
+                
+                # Uproszczenie z identyczną logiką dla d_offset co w funkcji dijkstra
+                for d_offset in range(day_idx, day_idx + 1):
+                    dep_abs = d_offset * 86400 + edge.departure_time_sec
+                    if dep_abs >= current_time:
+                        check_date = base_date + timedelta(days=d_offset)
+                        if self.calendar.check_if_service_is_active_on_day(edge.service_id, check_date):
+                            if best_dep_time is None or dep_abs < best_dep_time:
+                                best_dep_time = dep_abs
+                                best_arr_time = d_offset * 86400 + edge.arrival_time_sec
+                                best_d_offset = d_offset
+                                
+                if best_dep_time is not None:
+                    trip_state = (edge.trip_id, best_d_offset)
+                    
+                    if criterion == 't':
+                        new_cost = best_arr_time - start_time_sec
+                    else:
+                        is_transfer = 1 if (current_trip is not None and current_trip[0] != edge.trip_id) else 0
+                        new_cost = current_cost + is_transfer
+                        
+                    h_val = self._heuristic(edge.to_stop, end_stops_set, criterion, upgraded_heuristic)
+                    new_f = new_cost + h_val
+                    
+                    new_path = path + [("RIDE", edge.from_stop, edge.to_stop, edge.route_short_name, best_dep_time, best_arr_time, edge.trip_id)]
+                    heapq.heappush(pq, (new_f, new_cost, best_arr_time, next(counter), edge.to_stop, trip_state, new_path))
+
+            # przejścia po peronkach
+            related_stops = self.graph.get_related_stops_for_transfers(u)
+            for related_stop in related_stops:
+
+                new_path = path + [("WALK", u, related_stop)]
+                h_val = self._heuristic(related_stop, end_stops_set, criterion, upgraded_heuristic)
+                new_f = current_cost + h_val
+                
+                heapq.heappush(pq, (new_f, current_cost, current_time, next(counter), related_stop, current_trip, new_path))
+
+        return None, None, None
+
     def dijkstra(self, stop_A_name: str, stop_B_name: str, start_datetime_str: str) -> Tuple[Optional[List], Optional[int], Optional[datetime]]:
         """
         Znajduje najkrótszą ścieżkę z A do B minimalizując wyłącznie czas.
@@ -191,96 +282,7 @@ class RouteFinder:
         # 50 m/s ~ 180 km/h 
         return min_dist / 50.0
 
-    def a_star(self, stop_A_name: str, stop_B_name: str, start_datetime_str: str, criterion: str = 't', upgraded_heuristic: bool = False) -> Tuple[Optional[List], Optional[int], Optional[datetime]]:
-        """
-        Znajduje najkrótszą ścieżkę z A do B używając algorytmu A*.
-        criterion: 't' - minimalizacja czasu przejazdu
-                   'p' - minimalizacja liczby przesiadek
-        """
-        try:
-            start_dt = datetime.strptime(start_datetime_str, "%Y-%m-%d %H:%M")
-        except ValueError:
-            print("zla data, podaj w dobrym formacie")
-            return None, None, None
-            
-        start_time_sec = start_dt.hour * 3600 + start_dt.minute * 60 + start_dt.second
-        base_date = start_dt.replace(hour=0, minute=0, second=0, microsecond=0)
-        
-        start_stops = self.find_stop_ids_by_name(stop_A_name)
-        end_stops = self.find_stop_ids_by_name(stop_B_name)
-        
-        if not start_stops:
-            print(f"Nie znaleziono przystanku początkowego: {stop_A_name}")
-            return None, None, None
-        if not end_stops:
-            print(f"Nie znaleziono przystanku końcowego: {stop_B_name}")
-            return None, None, None
-
-        end_stops_set = set(end_stops)
-        counter = itertools.count()
-        
-        # Priority queue z elementami: (f_score, current_cost, current_time, counter_id, stop_id, current_trip, path)
-        pq = []
-        for start_stop in start_stops:
-            h = self._heuristic(start_stop, end_stops_set, criterion, upgraded_heuristic)
-            # Na start oba koszty to 0
-            heapq.heappush(pq, (h, 0, start_time_sec, next(counter), start_stop, None, []))
-            
-        # visited states: state_key -> min_cost
-        visited_states = {}
-        
-        while pq:
-            f, current_cost, current_time, _, u, current_trip, path = heapq.heappop(pq)
-            state_key = (u, current_trip)
-            
-            if state_key in visited_states and visited_states[state_key] <= current_cost:
-                continue
-            visited_states[state_key] = current_cost
-            
-            if u in end_stops_set:
-                return path, current_time, base_date
-                
-            for edge in self.graph.adjacency_list.get(u, []):
-                day_idx = current_time // 86400
-                best_dep_time, best_arr_time, best_d_offset = None, None, None
-                
-                # Uproszczenie z identyczną logiką dla d_offset co w funkcji dijkstra
-                for d_offset in range(day_idx, day_idx + 1):
-                    dep_abs = d_offset * 86400 + edge.departure_time_sec
-                    if dep_abs >= current_time:
-                        check_date = base_date + timedelta(days=d_offset)
-                        if self.calendar.check_if_service_is_active_on_day(edge.service_id, check_date):
-                            if best_dep_time is None or dep_abs < best_dep_time:
-                                best_dep_time = dep_abs
-                                best_arr_time = d_offset * 86400 + edge.arrival_time_sec
-                                best_d_offset = d_offset
-                                
-                if best_dep_time is not None:
-                    trip_state = (edge.trip_id, best_d_offset)
-                    
-                    if criterion == 't':
-                        new_cost = best_arr_time - start_time_sec
-                    else:
-                        is_transfer = 1 if (current_trip is not None and current_trip[0] != edge.trip_id) else 0
-                        new_cost = current_cost + is_transfer
-                        
-                    h_val = self._heuristic(edge.to_stop, end_stops_set, criterion, upgraded_heuristic)
-                    new_f = new_cost + h_val
-                    
-                    new_path = path + [("RIDE", edge.from_stop, edge.to_stop, edge.route_short_name, best_dep_time, best_arr_time, edge.trip_id)]
-                    heapq.heappush(pq, (new_f, new_cost, best_arr_time, next(counter), edge.to_stop, trip_state, new_path))
-
-            # przejścia po peronkach
-            related_stops = self.graph.get_related_stops_for_transfers(u)
-            for related_stop in related_stops:
-
-                new_path = path + [("WALK", u, related_stop)]
-                h_val = self._heuristic(related_stop, end_stops_set, criterion, upgraded_heuristic)
-                new_f = current_cost + h_val
-                
-                heapq.heappush(pq, (new_f, current_cost, current_time, next(counter), related_stop, current_trip, new_path))
-
-        return None, None, None
+  
 
     @staticmethod
     def format_time(seconds: int, base_date: datetime = None) -> str:
