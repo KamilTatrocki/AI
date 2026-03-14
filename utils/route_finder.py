@@ -63,7 +63,6 @@ class RouteFinder:
                 day_idx = current_time // 86400
                 best_dep_time, best_arr_time, best_d_offset = None, None, None
                 
-                # Uproszczenie z identyczną logiką dla d_offset co w funkcji dijkstra
                 for d_offset in range(day_idx, day_idx + 1):
                     dep_abs = d_offset * 86400 + edge.departure_time_sec
                     if dep_abs >= current_time:
@@ -89,7 +88,7 @@ class RouteFinder:
                     new_path = path + [("RIDE", edge.from_stop, edge.to_stop, edge.route_short_name, best_dep_time, best_arr_time, edge.trip_id)]
                     heapq.heappush(pq, (new_f, new_cost, best_arr_time, next(counter), edge.to_stop, trip_state, new_path))
 
-            # przejścia po peronkach
+            # przejścia piesze po peronach
             related_stops = self.graph.get_related_stops_for_transfers(u)
             for related_stop in related_stops:
 
@@ -124,7 +123,7 @@ class RouteFinder:
 
     def dijkstra(self, stop_A_name: str, stop_B_name: str, start_datetime_str: str) -> Tuple[Optional[List], Optional[int], Optional[datetime]]:
         """
-        Znajduje najkrótszą ścieżkę z A do B minimalizując wyłącznie czas.
+        minimalizuje tylko czas
         """
         try:
             start_dt = datetime.strptime(start_datetime_str, "%Y-%m-%d %H:%M")
@@ -295,7 +294,7 @@ class RouteFinder:
         if min_dist == float('inf'):
             return 0.0
             
-        # 50 m/s ~ 180 km/h 
+        # 50 m/s ~ 180 km/h - optymistyczna bo pociagi jezdza do 160 (model kd sprinter)
         return min_dist / 50.0
 
   
