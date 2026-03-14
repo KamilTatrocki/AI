@@ -16,11 +16,6 @@ class RouteFinder:
         return [stop_id for stop_id, data in self.graph.nodes.items() if data['stop_name'] == name]
 
     def a_star(self, stop_A_name: str, stop_B_name: str, start_datetime_str: str, criterion: str = 't', upgraded_heuristic: bool = False) -> Tuple[Optional[List], Optional[int], Optional[datetime]]:
-        """
-        Znajduje najkrótszą ścieżkę z A do B używając algorytmu A*.
-        criterion: 't' - minimalizacja czasu przejazdu
-                   'p' - minimalizacja liczby przesiadek
-        """
         try:
             start_dt = datetime.strptime(start_datetime_str, "%Y-%m-%d %H:%M")
         except ValueError:
