@@ -41,8 +41,8 @@ if __name__ == "__main__":
     criteria = "p" # t - czas lub p - przesiadki
     start_time_str = "2026-03-15 14:00"
 
-    # B = "Zduny"   
-    # A = "Lubawka"
+    B = "Zduny"   
+    A = "Lubawka"
 
     #inne
     # A= "Forst (Lausitz)"
@@ -51,8 +51,8 @@ if __name__ == "__main__":
 
     # start_time_str = "2026-03-11 13:00"
 
-    A = "Sobótka"   
-    B = "Smolec"
+    # A = "Sobótka"   
+    # B = "Smolec"
     # A = "Legnica"   
     # B = "Zgorzelec" 
     # start_time_str = "2026-03-15 21:00" # czas rozpoczęcia podróży
