@@ -106,6 +106,27 @@ class RouteFinder:
 
         return None, None, None
 
+    def evaluate_a_star_route(self, stop_A_name: str, stop_B_name: str, start_datetime_str: str, criterion: str = 't', upgraded_heuristic: bool = True) -> Tuple[Optional[int], Optional[List], Optional[int], Optional[datetime]]:
+        path, arrival_time, base_date = self.a_star(stop_A_name, stop_B_name, start_datetime_str, criterion, upgraded_heuristic)
+        
+        if not path:
+            return None, None, None, None
+            
+        if criterion == 't':
+            start_dt = datetime.strptime(start_datetime_str, "%Y-%m-%d %H:%M")
+            start_sec = start_dt.hour * 3600 + start_dt.minute * 60 + start_dt.second
+            cost = arrival_time - start_sec
+        else:
+            cost = 0
+            last_trip = None
+            for step in path:
+                if step[0] == "RIDE":
+                    if last_trip is not None and last_trip != step[6]:
+                        cost += 1
+                    last_trip = step[6]
+                    
+        return cost, path, arrival_time, base_date
+
     def dijkstra(self, stop_A_name: str, stop_B_name: str, start_datetime_str: str) -> Tuple[Optional[List], Optional[int], Optional[datetime]]:
         """
         Znajduje najkrótszą ścieżkę z A do B minimalizując wyłącznie czas.
@@ -309,14 +330,22 @@ class RouteFinder:
 
         print(f"Znaleziono trasę! Najszybszy czas przyjazdu na miejsce: {self.format_time(arrival_time, base_date)}")
         print("Trasa:")
+        prev_route = None
         for step in path:
             if step[0] == "RIDE":
                 _, f, t, route, dep, arr, trip = step
+                
+                if prev_route is not None and prev_route != route:
+                    stop_A = self.graph.nodes[f]['stop_name']
+                    print(f"  --> [PRZESIADKA] Zmiana linii na stacji {stop_A} z {prev_route} na {route} <--")
+                    
                 dep_str = self.format_time(dep, base_date)
                 arr_str = self.format_time(arr, base_date)
                 stop_A = self.graph.nodes[f]['stop_name']
                 stop_B = self.graph.nodes[t]['stop_name']
                 print(f"  [{dep_str} - {arr_str}] {stop_A} -> {stop_B} [Linia {route}]")
+                
+                prev_route = route
             elif step[0] == "WALK":
-                print(f"  [WALK] {step[1]} -> {step[2]} (przejście wewnątrz stacji)")
-                pass 
+                print(f"  [WALK + PRZESIADKA] {step[1]} -> {step[2]} (przejście wewnątrz stacji)")
+                prev_route = None
