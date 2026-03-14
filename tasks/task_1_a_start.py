@@ -30,7 +30,6 @@ from utils.graph import Graph
 from utils.route_finder import RouteFinder
 from data_consumer import main_consumer
 
-
 if __name__ == "__main__":
     """
     uv run tasks/task_1_a_start.py
@@ -63,8 +62,7 @@ if __name__ == "__main__":
     print(f"Rozpoczęcie szukania A*: {A} -> {B} (Kryterium: {criteria}, Start: {start_time_str})")
     
     start_eval_time = time.time()
-    upgraded_heuristic_flag = True
-    path, arrival_time, base_date = route_finder.a_star(A, B, start_time_str, criterion=criteria, upgraded_heuristic=upgraded_heuristic_flag)
+    cost, path, arrival_time, base_date = route_finder.evaluate_a_star_route(A, B, start_time_str, criteria, upgraded_heuristic=True)
     eval_time = time.time() - start_eval_time
     
     if path:
@@ -72,20 +70,11 @@ if __name__ == "__main__":
         
         # standard error
         if criteria == 't':
-            start_dt = datetime.strptime(start_time_str, "%Y-%m-%d %H:%M")
-            start_sec = start_dt.hour * 3600 + start_dt.minute * 60 + start_dt.second
-            travel_time = arrival_time - start_sec
-            print(f"\nKryterium (czas podróży w sek.): {travel_time}", file=sys.stderr)
+            print(f"\nKryterium (czas podróży w sek.): {cost}", file=sys.stderr)
         else:
-            transfers = 0
-            last_trip = None
-            for step in path:
-                if step[0] == "RIDE":
-                    if last_trip is not None and last_trip != step[6]:
-                        transfers += 1
-                    last_trip = step[6]
-            print(f"\nKryterium (przesiadki): {transfers}", file=sys.stderr)
+            print(f"\nKryterium (przesiadki): {cost}", file=sys.stderr)
             
         print(f"Czas obliczeń: {eval_time:.4f} s", file=sys.stderr)
     else:
         print("Nie znaleziono trasy.")
+
