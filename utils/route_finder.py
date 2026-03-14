@@ -212,10 +212,7 @@ class RouteFinder:
                 self._routes_per_stop[u] = set()
             for e in edges:
                 self._routes_per_stop[u].add(e.route_id)
-                #gdyby byla stacja do ktorej mozna tylko przyjechac ale nie mozna z niej odjechac to 3 linie ponizej bylyby potrzebne
-                # if e.to_stop not in self._routes_per_stop:
-                #     self._routes_per_stop[e.to_stop] = set()
-                # self._routes_per_stop[e.to_stop].add(e.route_id)
+             
 
     def _heuristic_p(self, curr_stop: str, end_stops_set: set) -> float:
         if curr_stop in end_stops_set:
