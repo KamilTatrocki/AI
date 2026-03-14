@@ -330,14 +330,22 @@ class RouteFinder:
 
         print(f"Znaleziono trasę! Najszybszy czas przyjazdu na miejsce: {self.format_time(arrival_time, base_date)}")
         print("Trasa:")
+        prev_route = None
         for step in path:
             if step[0] == "RIDE":
                 _, f, t, route, dep, arr, trip = step
+                
+                if prev_route is not None and prev_route != route:
+                    stop_A = self.graph.nodes[f]['stop_name']
+                    print(f"  --> [PRZESIADKA] Zmiana linii na stacji {stop_A} z {prev_route} na {route} <--")
+                    
                 dep_str = self.format_time(dep, base_date)
                 arr_str = self.format_time(arr, base_date)
                 stop_A = self.graph.nodes[f]['stop_name']
                 stop_B = self.graph.nodes[t]['stop_name']
                 print(f"  [{dep_str} - {arr_str}] {stop_A} -> {stop_B} [Linia {route}]")
+                
+                prev_route = route
             elif step[0] == "WALK":
-                print(f"  [WALK] {step[1]} -> {step[2]} (przejście wewnątrz stacji)")
-                pass 
+                print(f"  [WALK + PRZESIADKA] {step[1]} -> {step[2]} (przejście wewnątrz stacji)")
+                prev_route = None

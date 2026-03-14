@@ -44,16 +44,16 @@ if __name__ == "__main__":
     B = "Sobótka"
 
     #inne
-    # A= "Forst (Lausitz)"
-    # B= "Jerzmanki"
-    # start_time_str = "2026-03-08 5:00"
+    A= "Forst (Lausitz)"
+    B= "Jerzmanki"
+    start_time_str = "2026-03-08 8:00"
 
-    start_time_str = "2026-03-11 14:00"
+    # start_time_str = "2026-03-11 13:00"
 
     # A = "Sobótka"   
     # B = "Smolec"
-    A = "Wrocław Główny"   
-    B = "Sobótka"
+    # A = "Legnica"   
+    # B = "Zgorzelec" 
     # start_time_str = "2026-03-15 21:00" # czas rozpoczęcia podróży
    
     
@@ -77,4 +77,4 @@ if __name__ == "__main__":
         print(f"Czas obliczeń: {eval_time:.4f} s", file=sys.stderr)
     else:
         print("Nie znaleziono trasy.")
-
+
