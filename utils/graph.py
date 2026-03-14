@@ -23,7 +23,6 @@ jazdu nast  ̨epnego kursu na tej samej stacji) oraz zwi  ̨eksza licznik przesi
 danym service_id jest aktywny w okre ́slonym dniu, nale ̇zy poł  ̨aczy ́c tygodniowy rozkład z calendar.txt
 z wyj  ̨atkami z calendar_dates.txt. Aplikacja studenta powinna przyjmowa ́c dat  ̨e pocz  ̨atkow  ̨a (lub
 u ̇zywa ́c domy ́slnej daty w okresie wa ̇zno ́sci) i uwzgl  ̨ednia ́c tylko kursy aktywne w danym dniu.
-8
 """
 import pandas as pd
 from collections import defaultdict
@@ -57,7 +56,7 @@ class Graph:
         self.build_edges()
         
     def build_nodes(self):
-        """1. Wierzchołki. Każdy wierzchołek reprezentuje przystanek lub peron."""
+        """Wierzchołki -     przystanek lub peron"""
         for _, row in self.data_consumer.stops.iterrows():
             stop_id = row['stop_id']
             parent_station = row['parent_station'] if pd.notna(row['parent_station']) else stop_id
@@ -71,7 +70,7 @@ class Graph:
             self.parent_station_map[parent_station].append(stop_id)
 
     def build_edges(self):
-        """2. Krawędzie kursów (połączenia bezpośrednie)."""
+        """połączenia bezpośrednie"""
         stops_times_df = self.data_consumer.stop_times.copy()
         trips_df = self.data_consumer.trips[['trip_id', 'route_id', 'service_id']].copy()
         routes_df = self.data_consumer.routes[['route_id', 'route_short_name', 'route_long_name']].copy()
@@ -111,7 +110,6 @@ class Graph:
 
     def get_related_stops_for_transfers(self, stop_id):
         """
-        3. Krawędzie przesiadkowe.
         Zwraca listę przystanków, do których można dojść w ramach tej samej stacji nadrzędnej.
         """
         if stop_id not in self.nodes:
