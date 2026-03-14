@@ -39,12 +39,6 @@ class Calendar:
         
         return active_services
 
-
-
-    # def check_if_route_is_active_on_day(self, route_id: str, day: datetime):
-    #     active_routes = self.get_all_active_routes_in_day(day)
-    #     return route_id in active_routes
-
     def check_if_service_is_active_on_day(self, service_id: str, day: datetime):
         active_services = self.get_Active_service_id_for_day(day)
         return service_id in active_services
