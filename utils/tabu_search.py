@@ -12,7 +12,6 @@ from utils.route_finder import RouteFinder
 class TabuSearch:
     def __init__(self, start_stop: str, intermediate_stops: str, criteria: str, start_time_str: str):
         self.start_stop = start_stop
-        # Split and clean the list of stops L
         self.stops_to_visit = [stop.strip() for stop in intermediate_stops.split(';') if stop.strip()]
         self.criteria = criteria
         self.start_time_str = start_time_str
@@ -21,14 +20,11 @@ class TabuSearch:
         self.graph = Graph(main_consumer)
         self.route_finder = RouteFinder(self.graph)
         
-        # Cache for evaluated legs: (from_stop, to_stop, start_time_sec) -> (cost, arrival_time_sec, path, base_date)
-        # To avoid recomputing A* for identical legs
-        self.leg_cache = {}
+        self.leg_cache = {} # (from_stop, to_stop, start_time_sec) -> (cost, arrival_time_sec, path, base_date)
         
-        # Tabu search parameters
-        self.max_iterations = 20 # Maximum iterations without improvement or overall
-        self.tabu_list = [] # Store tabu moves as (stop_A, stop_B)
-        self.tabu_tenure = 10 # Number of iterations a move stays tabu
+        self.max_iterations = 20
+        self.tabu_list = [] 
+        self.tabu_tenure = 10
 
     def evaluate_leg(self, stop_A: str, stop_B: str, current_time_str: str) -> Tuple:
         cache_key = (stop_A, stop_B, current_time_str)
