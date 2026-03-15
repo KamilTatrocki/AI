@@ -26,7 +26,7 @@ class TabuSearch:
         self.leg_cache = {}
         
         # Tabu search parameters
-        self.max_iterations = 100 # Maximum iterations without improvement or overall
+        self.max_iterations = 20 # Maximum iterations without improvement or overall
         self.tabu_list = [] # Store tabu moves as (stop_A, stop_B)
         self.tabu_tenure = 10 # Number of iterations a move stays tabu
 
@@ -85,14 +85,21 @@ class TabuSearch:
             
         total_cost = 0
         if self.criteria == 'p':
-            last_trip = None
+            last_route = None
             for leg in full_path:
                 path = leg[2]
                 for step in path:
                     if step[0] == "RIDE":
-                        if last_trip is not None and last_trip != step[6]:
+                        # step[3] is route_short_name — same as print_route uses
+                        if last_route is not None and last_route != step[3]:
                             total_cost += 1
-                        last_trip = step[6]
+                        last_route = step[3]
+                    elif step[0] == "WALK":
+                        # WALK is always a przesiadka (print_route shows [WALK + PRZESIADKA])
+                        # Only count if we were already riding something
+                        if last_route is not None:
+                            total_cost += 1
+                        last_route = None  # reset: next RIDE is a fresh boarding
         else:
             final_leg = full_path[-1]
             final_arrival_time = final_leg[3]
