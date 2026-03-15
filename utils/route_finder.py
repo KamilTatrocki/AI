@@ -42,7 +42,7 @@ class RouteFinder:
         pq = []
         for start_stop in start_stops:
             h = self._heuristic(start_stop, end_stops_set, criterion, upgraded_heuristic)
-            # Na start oba koszty to 0
+         
             heapq.heappush(pq, (h, 0, start_time_sec, next(counter), start_stop, None, []))
             
         # visited states: state_key -> min_cost
@@ -334,7 +334,6 @@ class RouteFinder:
         return time_str
 
     def print_route(self, path: List, arrival_time: int, base_date: datetime):
-        """Wypisuje sformatowaną trasę przejazdu"""
         if not path:
             print("Nie znaleziono trasy dopasowanej do podanych kryteriów i daty.")
             return
@@ -354,7 +353,7 @@ class RouteFinder:
                 arr_str = self.format_time(arr, base_date)
                 stop_A = self.graph.nodes[f]['stop_name']
                 stop_B = self.graph.nodes[t]['stop_name']
-                print(f"  [{dep_str} - {arr_str}] {stop_A} -> {stop_B} [Linia {route}]")
+                print(f"  [{dep_str} - {arr_str}] {stop_A} -> {stop_B} [Linia {route}] ({trip})")
                 
                 prev_route = route
             elif step[0] == "WALK":

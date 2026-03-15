@@ -52,10 +52,6 @@ class TabuSearch:
         return time_str
 
     def evaluate_permutation(self, permutation: List[str]) -> Tuple[float, List]:
-        """
-        Evaluates the full sequence: start_stop -> perm[0] -> ... -> perm[-1] -> start_stop
-        Returns total cost, and the combined paths/arrival data if valid, or float('inf') if invalid.
-        """
         full_sequence = [self.start_stop] + permutation + [self.start_stop]
         
         current_time_str = self.start_time_str
@@ -68,14 +64,11 @@ class TabuSearch:
             cost, arrival_time, path, base_date = self.evaluate_leg(from_stop, to_stop, current_time_str)
             
             if cost == float('inf') or path is None:
-                # Disconnected leg
                 return float('inf'), None
                 
             full_path.append((from_stop, to_stop, path, arrival_time, base_date))
             
-            # Update current_time_str for the next leg based on arrival time
             current_time_str_full = self._format_datetime(arrival_time, base_date)
-            # convert to user format "%Y-%m-%d %H:%M"
             dt_obj = datetime.strptime(current_time_str_full, "%Y-%m-%d %H:%M:%S")
             current_time_str = dt_obj.strftime("%Y-%m-%d %H:%M")
             
@@ -86,13 +79,10 @@ class TabuSearch:
                 path = leg[2]
                 for step in path:
                     if step[0] == "RIDE":
-                        # step[3] is route_short_name — same as print_route uses
-                        if last_route is not None and last_route != step[3]:
+                        if last_route is not None and last_route != step[6]:
                             total_cost += 1
-                        last_route = step[3]
+                        last_route = step[6]
                     elif step[0] == "WALK":
-                        # WALK is always a przesiadka (print_route shows [WALK + PRZESIADKA])
-                        # Only count if we were already riding something
                         if last_route is not None:
                             total_cost += 1
                         last_route = None  # reset: next RIDE is a fresh boarding
@@ -117,7 +107,7 @@ class TabuSearch:
         for i, j in combinations(indices, 2):
             neighbor = list(permutation)
             neighbor[i], neighbor[j] = neighbor[j], neighbor[i]
-            # Pair representing the move, sorted to treat (A,B) and (B,A) as the same move
+            #sorted to treat (A,B) and (B,A) as the same move
             move = tuple(sorted([permutation[i], permutation[j]]))
             neighbors.append((neighbor, move))
         return neighbors
@@ -125,7 +115,6 @@ class TabuSearch:
     def search(self):
         start_eval_time = time.time()
         
-        # Initial solution: sequential from the list L
         current_solution = list(self.stops_to_visit)
         best_solution = list(current_solution)
         
@@ -165,19 +154,15 @@ class TabuSearch:
                     best_move = move
                     
             if best_neighbor is None:
-                # No valid non-tabu neighbors
                 break
                 
-            # Move to best neighbor
             current_solution = best_neighbor
             current_cost = best_neighbor_cost
             current_path_info = best_neighbor_path_info
             
-            # Update Tabu list
             if best_move is not None:
                 tabu_moves[best_move] = iteration + self.tabu_tenure
                 
-            # Update global best
             if current_cost < best_cost:
                 best_cost = current_cost
                 best_solution = list(current_solution)
@@ -187,13 +172,13 @@ class TabuSearch:
             else:
                 iterations_without_improvement += 1
                 
-            # Stop if no improvement for 5 consecutive iterations
-            if iterations_without_improvement >= 5:
+            
+            if iterations_without_improvement >= 10:
                 break
                 
         eval_time = time.time() - start_eval_time
         
-        # Output results
+        
         self.print_solution(best_solution, best_path_info, best_cost, eval_time)
 
     def print_solution(self, best_solution, best_path_info, best_cost, eval_time):
@@ -209,6 +194,5 @@ class TabuSearch:
             print(f"\nOdcinek: {from_stop_leg} -> {to_stop_leg}")
             self.route_finder.print_route(path, arrival_time_sec, base_date)
 
-        # Wypisywanie na standardowe wyjście błędów wartość minimalizowanego kryterium oraz czas
         print(f"\nKryterium: {best_cost}", file=sys.stderr)
         print(f"Czas obliczeń: {eval_time}", file=sys.stderr)
