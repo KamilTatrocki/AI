@@ -115,7 +115,7 @@ class TabuSearch:
                     elif step[0] == "WALK":
                         if last_route is not None:
                             total_cost += 1
-                        last_route = None  # reset: next RIDE is a fresh boarding
+                        last_route = None 
         else:
             final_leg = full_path[-1]
             final_arrival_time = final_leg[3]
@@ -131,7 +131,6 @@ class TabuSearch:
         indices = list(range(len(permutation)))
         all_pairs = list(combinations(indices, 2))
 
-        # D: neighbourhood sampling
         if self.is_neighborhood_sampling_D and self.sample_size is not None:
             if self.sample_size < len(all_pairs):
                 all_pairs = random.sample(all_pairs, self.sample_size)
@@ -145,9 +144,6 @@ class TabuSearch:
             neighbors.append((neighbor, move))
         return neighbors
 
-    # ------------------------------------------------------------------
-    # Main search loop
-    # ------------------------------------------------------------------
 
     def search(self):
         start_eval_time = time.time()
