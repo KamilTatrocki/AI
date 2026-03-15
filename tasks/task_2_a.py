@@ -30,7 +30,7 @@ def start():
     # L= "Mirków;Wrocław Główny;Wałbrzych Główny;Zgorzelec"
     L= "Zgorzelec;Wrocław Główny;Mirków;Wałbrzych Główny"
     # L="Wrocław Główny;Zgorzelec;Mirków;Wałbrzych Główny"
-    criteria= "p"
+    criteria= "t"
     start_time_str= "2026-03-08 8:00"
 
 
