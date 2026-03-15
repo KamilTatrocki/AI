@@ -28,7 +28,7 @@ from utils.tabu_search import TabuSearch
 def start():
     A= "Szklarska Poręba Dolna"
     L= "Mirków;Wrocław Główny;Wałbrzych Główny;Zgorzelec;"
-    criteria= "t"
+    criteria= "p"
     start_time_str= "2026-03-08 8:00"
 
     tabu_search = TabuSearch(A, L, criteria, start_time_str)

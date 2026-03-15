@@ -26,9 +26,9 @@ class TabuSearch:
         self.leg_cache = {}
         
         # Tabu search parameters
-        self.max_iterations = 20 # Maximum iterations without improvement or overall
+        self.max_iterations = 100 # Maximum iterations without improvement or overall
         self.tabu_list = [] # Store tabu moves as (stop_A, stop_B)
-        self.tabu_tenure = 5 # Number of iterations a move stays tabu
+        self.tabu_tenure = 10 # Number of iterations a move stays tabu
 
     def evaluate_leg(self, stop_A: str, stop_B: str, current_time_str: str) -> Tuple:
         cache_key = (stop_A, stop_B, current_time_str)
@@ -36,7 +36,7 @@ class TabuSearch:
             return self.leg_cache[cache_key]
 
         cost, path, arrival_time, base_date = self.route_finder.evaluate_a_star_route(
-            stop_A, stop_B, current_time_str, self.criteria, upgraded_heuristic=True
+            stop_A, stop_B, current_time_str, self.criteria, upgraded_heuristic=False
         )
         
         if path is not None:
@@ -62,7 +62,6 @@ class TabuSearch:
         """
         full_sequence = [self.start_stop] + permutation + [self.start_stop]
         
-        total_cost = 0
         current_time_str = self.start_time_str
         full_path = []
         
@@ -76,7 +75,6 @@ class TabuSearch:
                 # Disconnected leg
                 return float('inf'), None
                 
-            total_cost += cost
             full_path.append((from_stop, to_stop, path, arrival_time, base_date))
             
             # Update current_time_str for the next leg based on arrival time
@@ -84,6 +82,25 @@ class TabuSearch:
             # convert to user format "%Y-%m-%d %H:%M"
             dt_obj = datetime.strptime(current_time_str_full, "%Y-%m-%d %H:%M:%S")
             current_time_str = dt_obj.strftime("%Y-%m-%d %H:%M")
+            
+        total_cost = 0
+        if self.criteria == 'p':
+            last_trip = None
+            for leg in full_path:
+                path = leg[2]
+                for step in path:
+                    if step[0] == "RIDE":
+                        if last_trip is not None and last_trip != step[6]:
+                            total_cost += 1
+                        last_trip = step[6]
+        else:
+            final_leg = full_path[-1]
+            final_arrival_time = final_leg[3]
+            final_base_date = final_leg[4]
+            final_arrival_str = self._format_datetime(final_arrival_time, final_base_date)
+            final_dt = datetime.strptime(final_arrival_str, "%Y-%m-%d %H:%M:%S")
+            start_dt = datetime.strptime(self.start_time_str, "%Y-%m-%d %H:%M")
+            total_cost = (final_dt - start_dt).total_seconds()
             
         return total_cost, full_path
 
@@ -181,26 +198,13 @@ class TabuSearch:
         if best_path_info is None:
             print("Nie znaleziono pełnej trasy.", file=sys.stderr)
             return
-            
-        # Wypisywanie na standardowe wyjście, w kolejnych wierszach, szczegółowe infor-macje o ścieżce, 
-        # w tym przystanek początkowy, przystanek końcowy, nazwę wykorzystanej linii, czas rozpoczęcia, czas zakończenia
-        # Print format: Przystanek_Początkowy | Przystanek_Końcowy | Linia | Start | End
+
+        print(f"Najlepsza trasa: {best_solution}")
         
         for leg in best_path_info:
             from_stop_leg, to_stop_leg, path, arrival_time_sec, base_date = leg
-            
-            for step in path:
-                if step[0] == "RIDE":
-                    _, f_id, t_id, route, dep, arr, trip = step
-                    stop_A_name = self.graph.nodes[f_id]['stop_name']
-                    stop_B_name = self.graph.nodes[t_id]['stop_name']
-                    dep_str = self._format_datetime(dep, base_date)
-                    arr_str = self._format_datetime(arr, base_date)
-                    
-                    # Wypisanie
-                    print(f"{stop_A_name} | {stop_B_name} | {route} | {dep_str} | {arr_str}")
-                else:
-                    print(f"Przesiadka")
+            print(f"\nOdcinek: {from_stop_leg} -> {to_stop_leg}")
+            self.route_finder.print_route(path, arrival_time_sec, base_date)
 
         # Wypisywanie na standardowe wyjście błędów wartość minimalizowanego kryterium oraz czas
         print(f"\nKryterium: {best_cost}", file=sys.stderr)
