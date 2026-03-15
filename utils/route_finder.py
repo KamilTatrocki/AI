@@ -196,7 +196,7 @@ class RouteFinder:
 
         return None, None, None
 
-    def _heuristic(self, curr_stop: str, end_stops_set: set, criterion: str, upgraded_heuristic: bool = False) -> float:
+    def _heuristic(self, curr_stop: str, end_stops_set: set, criterion: str, upgraded_heuristic: bool = True) -> float:
         if criterion == 'p':
             if upgraded_heuristic:
                 return self._heuristic_p_upgraded(curr_stop, end_stops_set)

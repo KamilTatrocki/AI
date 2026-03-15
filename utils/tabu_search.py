@@ -1,0 +1,207 @@
+import sys
+import time
+from datetime import datetime, timedelta
+from typing import List, Tuple
+from itertools import combinations
+import copy
+from data_consumer import main_consumer
+from utils.graph import Graph
+from utils.route_finder import RouteFinder
+
+
+class TabuSearch:
+    def __init__(self, start_stop: str, intermediate_stops: str, criteria: str, start_time_str: str):
+        self.start_stop = start_stop
+        # Split and clean the list of stops L
+        self.stops_to_visit = [stop.strip() for stop in intermediate_stops.split(';') if stop.strip()]
+        self.criteria = criteria
+        self.start_time_str = start_time_str
+        
+        main_consumer.load_data()
+        self.graph = Graph(main_consumer)
+        self.route_finder = RouteFinder(self.graph)
+        
+        # Cache for evaluated legs: (from_stop, to_stop, start_time_sec) -> (cost, arrival_time_sec, path, base_date)
+        # To avoid recomputing A* for identical legs
+        self.leg_cache = {}
+        
+        # Tabu search parameters
+        self.max_iterations = 20 # Maximum iterations without improvement or overall
+        self.tabu_list = [] # Store tabu moves as (stop_A, stop_B)
+        self.tabu_tenure = 5 # Number of iterations a move stays tabu
+
+    def evaluate_leg(self, stop_A: str, stop_B: str, current_time_str: str) -> Tuple:
+        cache_key = (stop_A, stop_B, current_time_str)
+        if cache_key in self.leg_cache:
+            return self.leg_cache[cache_key]
+
+        cost, path, arrival_time, base_date = self.route_finder.evaluate_a_star_route(
+            stop_A, stop_B, current_time_str, self.criteria, upgraded_heuristic=True
+        )
+        
+        if path is not None:
+            self.leg_cache[cache_key] = (cost, arrival_time, path, base_date)
+            return cost, arrival_time, path, base_date
+        return float('inf'), None, None, None
+        
+    def _format_datetime(self, time_sec: int, base_date: datetime) -> str:
+        days = time_sec // 86400
+        seconds_within_day = time_sec % 86400
+        h = seconds_within_day // 3600
+        m = (seconds_within_day % 3600) // 60
+        s = seconds_within_day % 60
+        
+        actual_date = base_date + timedelta(days=days)
+        time_str = f"{actual_date.strftime('%Y-%m-%d')} {h:02d}:{m:02d}:{s:02d}"
+        return time_str
+
+    def evaluate_permutation(self, permutation: List[str]) -> Tuple[float, List]:
+        """
+        Evaluates the full sequence: start_stop -> perm[0] -> ... -> perm[-1] -> start_stop
+        Returns total cost, and the combined paths/arrival data if valid, or float('inf') if invalid.
+        """
+        full_sequence = [self.start_stop] + permutation + [self.start_stop]
+        
+        total_cost = 0
+        current_time_str = self.start_time_str
+        full_path = []
+        
+        for i in range(len(full_sequence) - 1):
+            from_stop = full_sequence[i]
+            to_stop = full_sequence[i+1]
+            
+            cost, arrival_time, path, base_date = self.evaluate_leg(from_stop, to_stop, current_time_str)
+            
+            if cost == float('inf') or path is None:
+                # Disconnected leg
+                return float('inf'), None
+                
+            total_cost += cost
+            full_path.append((from_stop, to_stop, path, arrival_time, base_date))
+            
+            # Update current_time_str for the next leg based on arrival time
+            current_time_str_full = self._format_datetime(arrival_time, base_date)
+            # convert to user format "%Y-%m-%d %H:%M"
+            dt_obj = datetime.strptime(current_time_str_full, "%Y-%m-%d %H:%M:%S")
+            current_time_str = dt_obj.strftime("%Y-%m-%d %H:%M")
+            
+        return total_cost, full_path
+
+    def get_neighbors(self, permutation: List[str]) -> List[Tuple[List[str], Tuple[str, str]]]:
+        """
+        Generate all neighbors by swapping two nodes in the permutation.
+        Returns a list of (new_permutation, swapped_pair)
+        """
+        neighbors = []
+        indices = list(range(len(permutation)))
+        for i, j in combinations(indices, 2):
+            neighbor = list(permutation)
+            neighbor[i], neighbor[j] = neighbor[j], neighbor[i]
+            # Pair representing the move, sorted to treat (A,B) and (B,A) as the same move
+            move = tuple(sorted([permutation[i], permutation[j]]))
+            neighbors.append((neighbor, move))
+        return neighbors
+
+    def search(self):
+        start_eval_time = time.time()
+        
+        # Initial solution: sequential from the list L
+        current_solution = list(self.stops_to_visit)
+        best_solution = list(current_solution)
+        
+        current_cost, current_path_info = self.evaluate_permutation(current_solution)
+        best_cost = current_cost
+        best_path_info = current_path_info
+        
+        if current_cost == float('inf'):
+            print("Nie można znaleźć ścieżki początkowej.", file=sys.stderr)
+            return
+
+        iterations_without_improvement = 0
+        tabu_moves = {} # move -> expiration_iteration
+        
+        print(f"Początkowy koszt: {best_cost} dla permutacji: {best_solution}", file=sys.stderr)
+        
+        for iteration in range(self.max_iterations):
+            neighbors = self.get_neighbors(current_solution)
+            best_neighbor_cost = float('inf')
+            best_neighbor = None
+            best_neighbor_path_info = None
+            best_move = None
+            
+            for neighbor_solution, move in neighbors:
+                # Check if move is Tabu
+                if move in tabu_moves and tabu_moves[move] > iteration:
+                    # Aspiration criteria could be added here (e.g. if cost < best_cost)
+                    # We will simply skip tabu moves
+                    continue
+                    
+                cost, path_info = self.evaluate_permutation(neighbor_solution)
+                
+                if cost < best_neighbor_cost:
+                    best_neighbor_cost = cost
+                    best_neighbor = neighbor_solution
+                    best_neighbor_path_info = path_info
+                    best_move = move
+                    
+            if best_neighbor is None:
+                # No valid non-tabu neighbors
+                break
+                
+            # Move to best neighbor
+            current_solution = best_neighbor
+            current_cost = best_neighbor_cost
+            current_path_info = best_neighbor_path_info
+            
+            # Update Tabu list
+            if best_move is not None:
+                tabu_moves[best_move] = iteration + self.tabu_tenure
+                
+            # Update global best
+            if current_cost < best_cost:
+                best_cost = current_cost
+                best_solution = list(current_solution)
+                best_path_info = current_path_info
+                iterations_without_improvement = 0
+                print(f"Nowe najlepsze rozwiązanie w iteracji {iteration}: koszt {best_cost}, permutacja: {best_solution}", file=sys.stderr)
+            else:
+                iterations_without_improvement += 1
+                
+            # Stop if no improvement for 5 consecutive iterations
+            if iterations_without_improvement >= 5:
+                break
+                
+        eval_time = time.time() - start_eval_time
+        
+        # Output results
+        self.print_solution(best_solution, best_path_info, best_cost, eval_time)
+
+    def print_solution(self, best_solution, best_path_info, best_cost, eval_time):
+        
+        if best_path_info is None:
+            print("Nie znaleziono pełnej trasy.", file=sys.stderr)
+            return
+            
+        # Wypisywanie na standardowe wyjście, w kolejnych wierszach, szczegółowe infor-macje o ścieżce, 
+        # w tym przystanek początkowy, przystanek końcowy, nazwę wykorzystanej linii, czas rozpoczęcia, czas zakończenia
+        # Print format: Przystanek_Początkowy | Przystanek_Końcowy | Linia | Start | End
+        
+        for leg in best_path_info:
+            from_stop_leg, to_stop_leg, path, arrival_time_sec, base_date = leg
+            
+            for step in path:
+                if step[0] == "RIDE":
+                    _, f_id, t_id, route, dep, arr, trip = step
+                    stop_A_name = self.graph.nodes[f_id]['stop_name']
+                    stop_B_name = self.graph.nodes[t_id]['stop_name']
+                    dep_str = self._format_datetime(dep, base_date)
+                    arr_str = self._format_datetime(arr, base_date)
+                    
+                    # Wypisanie
+                    print(f"{stop_A_name} | {stop_B_name} | {route} | {dep_str} | {arr_str}")
+                else:
+                    print(f"Przesiadka")
+
+        # Wypisywanie na standardowe wyjście błędów wartość minimalizowanego kryterium oraz czas
+        print(f"\nKryterium: {best_cost}", file=sys.stderr)
+        print(f"Czas obliczeń: {eval_time}", file=sys.stderr)
