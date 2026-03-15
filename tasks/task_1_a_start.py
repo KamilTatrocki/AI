@@ -24,6 +24,7 @@ import os
 import time
 from datetime import datetime
 
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from utils.graph import Graph
@@ -46,7 +47,7 @@ if __name__ == "__main__":
     #inne
     # A= "Forst (Lausitz)"
     # B= "Jerzmanki"
-    start_time_str = "2026-03-11 8:00"
+    start_time_str = "2026-03-08 8:00"
 
     # start_time_str = "2026-03-11 13:00"
 
@@ -64,7 +65,7 @@ if __name__ == "__main__":
     print(f"Rozpoczęcie szukania A*: {A} -> {B} (Kryterium: {criteria}, Start: {start_time_str})")
     
     start_eval_time = time.time()
-    cost, path, arrival_time, base_date = route_finder.evaluate_a_star_route(A, B, start_time_str, criteria, upgraded_heuristic=False)
+    cost, path, arrival_time, base_date = route_finder.evaluate_a_star_route(A, B, start_time_str, criteria, upgraded_heuristic=True)
     eval_time = time.time() - start_eval_time
     
     if path:

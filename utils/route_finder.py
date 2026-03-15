@@ -2,7 +2,7 @@ import heapq
 import itertools
 from datetime import datetime, timedelta
 from typing import List, Tuple, Optional
-
+from collections import defaultdict
 from utils.graph import Graph
 from utils.calendar import Calendar
 
@@ -212,10 +212,7 @@ class RouteFinder:
                 self._routes_per_stop[u] = set()
             for e in edges:
                 self._routes_per_stop[u].add(e.route_id)
-                #gdyby byla stacja do ktorej mozna tylko przyjechac ale nie mozna z niej odjechac to 3 linie ponizej bylyby potrzebne
-                # if e.to_stop not in self._routes_per_stop:
-                #     self._routes_per_stop[e.to_stop] = set()
-                # self._routes_per_stop[e.to_stop].add(e.route_id)
+             
 
     def _heuristic_p(self, curr_stop: str, end_stops_set: set) -> float:
         if curr_stop in end_stops_set:
@@ -230,41 +227,61 @@ class RouteFinder:
                 
         return 1.0
 
-    def _build_hub_data(self):
-        if hasattr(self, '_hub_connected_routes'):
+    def _build_route_graph(self):
+        if hasattr(self, '_route_neighbors'):
             return
+            
         self._build_routes_per_stop()
-        self._major_hubs = {stop_id for stop_id, r in self._routes_per_stop.items() if len(r) > 4}
         
-        self._hub_connected_routes = {}
-        for hub in self._major_hubs:
-            hub_routes = self._routes_per_stop[hub]
-            for r in hub_routes:
-                if r not in self._hub_connected_routes:
-                    self._hub_connected_routes[r] = set()
-                self._hub_connected_routes[r].update(hub_routes)
+        self._station_routes = defaultdict(set)
+        #powstanie _station_routes {przystanek: {linie z max 1 przesiadka}}
+        for stop_id, routes in self._routes_per_stop.items():
+            self._station_routes[stop_id].update(routes)
+            for related in self.graph.get_related_stops_for_transfers(stop_id):
+                self._station_routes[stop_id].update(self._routes_per_stop.get(related, set()))
+                
+        self._route_neighbors = defaultdict(set)
+        #powstanie _route_neighbors {linia: {linie z max 1 przesiadka}}
+        for stop_id, routes in self._station_routes.items():
+            for r in routes:
+                self._route_neighbors[r].update(routes)
 
     def _heuristic_p_upgraded(self, curr_stop: str, end_stops_set: set) -> float:
         if curr_stop in end_stops_set:
             return 0.0
             
-        self._build_hub_data()
-        curr_routes = self._routes_per_stop.get(curr_stop, set())
+        self._build_route_graph()
+        
+        curr_routes = self._station_routes.get(curr_stop, set())
         if not curr_routes:
-            return 1.0
+            return 2.0
             
-        end_routes = set()
-        for end_stop in end_stops_set:
-            end_routes.update(self._routes_per_stop.get(end_stop, set()))
+        cache_key = frozenset(end_stops_set)
+        if hasattr(self, '_end_routes_cache') and cache_key in self._end_routes_cache:
+            end_routes = self._end_routes_cache[cache_key]
+            end_neighbors = self._end_neighbors_cache[cache_key]
+        else:
+            if not hasattr(self, '_end_routes_cache'):
+                self._end_routes_cache = {}
+                self._end_neighbors_cache = {}
+                
+            end_routes = set()
+            for end_stop in end_stops_set:
+                end_routes.update(self._station_routes.get(end_stop, set()))
+            self._end_routes_cache[cache_key] = end_routes
+            
+            end_neighbors = set()
+            for r in end_routes:
+                end_neighbors.update(self._route_neighbors.get(r, set()))
+            self._end_neighbors_cache[cache_key] = end_neighbors
             
         if curr_routes.intersection(end_routes):
             return 0.0
             
-        for r in curr_routes:
-            if self._hub_connected_routes.get(r, set()).intersection(end_routes):
-                return 0.5
-                
-        return 1.0
+        if curr_routes.intersection(end_neighbors):
+            return 1.0
+            
+        return 2.0
 
     def _heuristic_t(self, curr_stop: str, end_stops_set: set) -> float:
         min_dist = float('inf')
