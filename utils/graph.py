@@ -56,7 +56,7 @@ class Graph:
         self.build_edges()
         
     def build_nodes(self):
-        """Wierzchołki - przystanek lub peron"""
+        """przystanek lub peron"""
         for _, row in self.data_consumer.stops.iterrows():
             stop_id = row['stop_id']
             parent_station = row['parent_station'] if pd.notna(row['parent_station']) else stop_id
