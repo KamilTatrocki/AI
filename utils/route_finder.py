@@ -334,7 +334,6 @@ class RouteFinder:
         return time_str
 
     def print_route(self, path: List, arrival_time: int, base_date: datetime):
-        """Wypisuje sformatowaną trasę przejazdu"""
         if not path:
             print("Nie znaleziono trasy dopasowanej do podanych kryteriów i daty.")
             return
