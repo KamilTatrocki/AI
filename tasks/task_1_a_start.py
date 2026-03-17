@@ -41,12 +41,12 @@ if __name__ == "__main__":
     criteria = "p" # t - czas lub p - przesiadki
     start_time_str = "2026-03-15 14:00"
 
-    B = "Zduny"   
-    A = "Lubawka"
+    # B = "Zduny"   
+    # A = "Lubawka"
 
     #inne
-    # A= "Forst (Lausitz)"
-    # B= "Jerzmanki"
+    A= "Forst (Lausitz)"
+    B= "Jerzmanki"
     start_time_str = "2026-03-08 8:00"
 
     # start_time_str = "2026-03-11 13:00"
