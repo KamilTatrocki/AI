@@ -26,9 +26,12 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utils.tabu_search import TabuSearch
 
 def start():
+    """
+    uv run tasks/task_2.py
+    """
     A= "Szklarska Poręba Dolna"
     # L= "Mirków;Wrocław Główny;Wałbrzych Główny;Zgorzelec"
-    L= "Zgorzelec;Wrocław Główny;Mirków;Wałbrzych Główny"
+    L= "Sobótka;Zgorzelec;Wrocław Główny;Świdnica Miasto"
     # L="Wrocław Główny;Zgorzelec;Mirków;Wałbrzych Główny"
     criteria= "t"
     start_time_str= "2026-03-08 8:00"
