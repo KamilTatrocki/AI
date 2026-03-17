@@ -110,7 +110,7 @@ class Graph:
 
     def get_related_stops_for_transfers(self, stop_id):
         """
-        Zwraca listę przystanków, do których można dojść w ramach tej samej stacji nadrzędnej.
+        Zwraca listę przystanków, do których można dojść w ramach tego samego parenta
         """
         if stop_id not in self.nodes:
             return []
