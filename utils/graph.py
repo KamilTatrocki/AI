@@ -1,29 +1,3 @@
-"""by wykorzysta ́c dostarczone dane GTFS do wyszukiwania  ́scie ̇zek, student musi skonstruowa ́c skierowany
-graf zale ̇zny od czasu. Poni ̇zsze wytyczne opisuj  ̨a wzajemne powi  ̨azania plików oraz sposób tworzenia kra-
-w  ̨edzi:
-1. Wierzchołki. Ka ̇zdy wierzchołek grafu reprezentuje przystanek (lub peron) zdefiniowany w stops.txt.
-Współrz ̨edne geograficzne (stop_lat, stop_lon) mog  ̨a by ́c wykorzystane do obliczenia heurystycz-
-nych estymacji odległo ́sci dla algorytmu A* (np. za pomoc  ̨a wzoru haversine lub aproksymacji euklide-
-sowej na rzutowanych współrz ̨ednych).
-2. Kraw  ̨edzie kursów (poł  ̨aczenia bezpo  ́srednie). Kraw  ̨ed ́z skierowana istnieje mi  ̨edzy dwoma kolej-
-nymi przystankami w ramach tego samego kursu. Dla ka ̇zdego kursu w trips.txt plik stop_times.txt
-dostarcza uporz  ̨adkowan  ̨a sekwencj  ̨e przystanków (posortowan  ̨a po stop_sequence). Dla kolejnych
-wpisów (i, i + 1) w tej sekwencji nale ̇zy utworzy ́c kraw  ̨ed ́z od stop_idi do stop_idi+1 z:
-• czas odjazdu = departure_timei
-• czas przyjazdu = arrival_timei+1
-• czas przejazdu = arrival_timei+1 − departure_timei
-• nazwa linii = route_short_name (lub route_long_name, je ́sli krótka nazwa jest pusta), uzyskana
-poprzez zł  ̨aczenie trips.txt → routes.txt
-3. Kraw  ̨edzie przesiadkowe. Gdy pasa ̇zer przesiada si  ̨e z jednej linii na drug  ̨a na tej samej stacji, nast  ̨e-
-puje przesiadka. Przesiadki powinny by ́c modelowane przez ł  ̨aczenie przystanków, które maj  ̨a t  ̨e sam  ̨a
-parent_station (lub ten sam stop_id, je ́sli hierarchia nadrz ̨edny–podrz ̨edny nie istnieje). Przesiadka
-wi  ̨a ̇ze si  ̨e z czasem oczekiwania (ró ̇znica mi  ̨edzy czasem przyjazdu pierwszego kursu a czasem od-
-jazdu nast  ̨epnego kursu na tej samej stacji) oraz zwi  ̨eksza licznik przesiadek o jeden.
-4. Filtrowanie dni kursowania. Nie wszystkie kursy realizowane s  ̨a codziennie. Aby ustali ́c, czy kurs o
-danym service_id jest aktywny w okre ́slonym dniu, nale ̇zy poł  ̨aczy ́c tygodniowy rozkład z calendar.txt
-z wyj  ̨atkami z calendar_dates.txt. Aplikacja studenta powinna przyjmowa ́c dat  ̨e pocz  ̨atkow  ̨a (lub
-u ̇zywa ́c domy ́slnej daty w okresie wa ̇zno ́sci) i uwzgl  ̨ednia ́c tylko kursy aktywne w danym dniu.
-"""
 import pandas as pd
 from collections import defaultdict
 from .calendar import Calendar
