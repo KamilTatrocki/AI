@@ -1,24 +1,3 @@
-"""
-1. Wykorzystuj ˛ac dostarczony zbiór danych GTFS od Kolei Dolno´sl ˛askich, zaimplementuj algorytm wy
-szukiwania najkrótszych ´scie˙zek mi˛edzy podanymi przystankami A i B. Jako funkcj˛e kosztu zastosuj (w
-zale˙zno´sci od decyzji u˙zytkownika) czas przejazdu z A do B lub liczb˛e przesiadek.
-Aplikacja powinna przyjmowa´c dane wej´sciowe w postaci 4 zmiennych:
-(a) przystanek pocz ˛atkowy A
-(b) przystanek ko´ncowy B
-(c) kryterium optymalizacji: warto´s´c t oznacza minimalizacj˛e czasu przejazdu, warto´s´c p oznacza
-minimalizacj˛e liczby przesiadek
-(d) czas rozpocz˛ecia podró˙zy
-Rozwi ˛azanie powinno wypisywa´c na standardowe wyj´scie w kolejnych wierszach szczegółowe infor
-macje o ´scie˙zce, w tym przystanek pocz ˛atkowy, przystanek ko´ncowy, nazw˛e wykorzystanej linii, czas
-rozpocz˛ecia, czas zako´nczenia, a na standardowe wyj´scie bł˛edów warto´s´c minimalizowanego kryte
-rium oraz czas potrzebny do obliczenia najkrótszej ´scie˙zki.
-Punktacja:
-(b) wyszukiwanie najkrótszej ´scie˙zki z A do B za pomoc ˛aalgorytmu A*, na podstawie kryterium czasu
-przejazdu (25 punktów).
-(c) wyszukiwanie najkrótszej ´scie˙zki z A do B za pomoc ˛aalgorytmu A*, na podstawie kryterium liczby
-przesiadek (25 punktów).
-"""
-
 import sys
 import os
 import time
