@@ -1,7 +1,3 @@
-"""
-Wersja wykorzystująca uproszczoną klasę RouteFinderSimple optymalizującą
-wyłącznie najszybszy czas przyjazdu (bez wgłębiania się w przesiadki).
-"""
 import sys
 import os
 

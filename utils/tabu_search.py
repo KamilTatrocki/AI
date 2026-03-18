@@ -46,7 +46,7 @@ class TabuSearch:
         if self.is_dynamic_tabu_size_B:
             self.tabu_tenure = max(3, math.ceil(math.sqrt(n)) * 2)
         else:
-            self.tabu_tenure = 5
+            self.tabu_tenure = 5 #tabu tenure to na ile ruch dostaje blocka
 
         if self.is_neighborhood_sampling_D:
             total_pairs = n * (n - 1) // 2
