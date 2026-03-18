@@ -338,7 +338,7 @@ class RouteFinder:
             print("Nie znaleziono trasy dopasowanej do podanych kryteriów i daty.")
             return
 
-        print(f"Znaleziono trasę! Najszybszy czas przyjazdu na miejsce: {self.format_time(arrival_time, base_date)}")
+        # print(f"Znaleziono trasę! Najszybszy czas przyjazdu na miejsce: {self.format_time(arrival_time, base_date)}")
         print("Trasa:")
         prev_route = None
         for step in path:

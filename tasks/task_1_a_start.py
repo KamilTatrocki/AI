@@ -17,7 +17,7 @@ if __name__ == "__main__":
     main_consumer.load_data()
     graph = Graph(main_consumer)
     
-    criteria = "p" # t - czas lub p - przesiadki
+    criteria = "t" # t - czas lub p - przesiadki
     start_time_str = "2026-03-15 14:00"
 
     # B = "Zduny"   
@@ -35,9 +35,9 @@ if __name__ == "__main__":
     # A = "Legnica"   
     # B = "Zgorzelec" 
     # start_time_str = "2026-03-15 21:00" # czas rozpoczęcia podróży
-    A = "Wrocław Sołtysowice"   
-    B = "Oleśnica"
-    start_time_str = "2026-03-08 15:20" # czas rozpoczęcia podróży
+    # A = "Wrocław Sołtysowice"   
+    # B = "Oleśnica"
+    # start_time_str = "2026-03-08 15:20" # czas rozpoczęcia podróży
     
     route_finder = RouteFinder(graph)
     
