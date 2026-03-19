@@ -17,7 +17,7 @@ if __name__ == "__main__":
     main_consumer.load_data()
     graph = Graph(main_consumer)
     
-    criteria = "t" # t - czas lub p - przesiadki
+    criteria = "p" # t - czas lub p - przesiadki
     start_time_str = "2026-03-15 14:00"
 
     # B = "Zduny"   
@@ -44,7 +44,7 @@ if __name__ == "__main__":
     print(f"Rozpoczęcie szukania A*: {A} -> {B} (Kryterium: {criteria}, Start: {start_time_str})")
     
     start_eval_time = time.time()
-    cost, path, arrival_time, base_date = route_finder.evaluate_a_star_route(A, B, start_time_str, criteria, upgraded_heuristic=True)
+    cost, path, arrival_time, base_date = route_finder.evaluate_a_star_route(A, B, start_time_str, criteria, upgraded_heuristic=False)
     eval_time = time.time() - start_eval_time
     
     if path:
