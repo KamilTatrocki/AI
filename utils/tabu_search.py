@@ -38,7 +38,7 @@ class TabuSearch:
 
         self.leg_cache = {}  # (from_stop, to_stop, start_time_str) -> (cost, arrival_time_sec, path, base_date)
 
-        self.max_iterations = 20
+        self.max_iterations = 100
 
         n = len(self.stops_to_visit)
 
@@ -211,7 +211,7 @@ class TabuSearch:
             else:
                 iterations_without_improvement += 1
 
-            if iterations_without_improvement >= 10:
+            if iterations_without_improvement >= 30:
                 break
 
         eval_time = time.time() - start_eval_time

@@ -48,15 +48,16 @@ class Graph:
         stops_times_df = self.data_consumer.stop_times.copy()
         trips_df = self.data_consumer.trips[['trip_id', 'route_id', 'service_id']].copy()
         routes_df = self.data_consumer.routes[['route_id', 'route_short_name', 'route_long_name']].copy()
-        
+
         trips_routes = trips_df.merge(routes_df, on='route_id', how='left')
         st_merged = stops_times_df.merge(trips_routes, on='trip_id', how='left')
         st_merged = st_merged.sort_values(by=['trip_id', 'stop_sequence'])
-        
+
         st_merged['next_stop_id'] = st_merged.groupby('trip_id')['stop_id'].shift(-1)
         st_merged['next_arrival_time'] = st_merged.groupby('trip_id')['arrival_time'].shift(-1)
-        
+
         edges_df = st_merged.dropna(subset=['next_stop_id']).copy()
+        edges_df = edges_df[edges_df['pickup_type'] == 0]
         
         def convert_time(t):
             try:
