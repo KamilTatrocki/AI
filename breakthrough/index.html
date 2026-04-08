@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Przeglądarka Partii - Poprawiona</title>
+    <style>
+        :root {
+            --bg-color: #1e1e1e;
+            --card-bg: #2d2d2d;
+            --accent: #4a90e2;
+            --white-sq: #ebecd0;
+            --black-sq: #779556;
+            --white-piece: #ffffff;
+            --black-piece: #1a1a1a;
+            --highlight: #f1c40f;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: white;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            width: 90%;
+            max-width: 800px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            background: #1a1a1a;
+            color: #27ae60;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 10px;
+            font-family: monospace;
+            margin-bottom: 15px;
+            resize: vertical;
+        }
+
+        #info-box {
+            margin: 20px 0;
+            min-height: 80px;
+        }
+
+        #info-text {
+            font-size: 1.1em;
+            color: #aaa;
+            margin-bottom: 5px;
+        }
+
+        #move-text {
+            font-weight: bold;
+            font-size: 1.3em;
+            color: var(--accent);
+        }
+
+        .board-wrapper {
+            display: inline-block;
+            padding: 12px;
+            background: #444;
+            border-radius: 8px;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.6);
+        }
+
+        #chess-board {
+            display: grid;
+            border: 3px solid #111;
+        }
+
+        .square {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .square.light {
+            background-color: var(--white-sq);
+        }
+
+        .square.dark {
+            background-color: var(--black-sq);
+        }
+
+        .piece {
+            width: 75%;
+            height: 75%;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.4em;
+        }
+
+        .piece.B {
+            background: var(--black-piece);
+            color: white;
+            border: 2px solid #000;
+        }
+
+        .piece.W {
+            background: var(--white-piece);
+            color: black;
+            border: 2px solid #ddd;
+        }
+
+        .piece.o {
+            background: var(--highlight);
+            border: 2px solid #d35400;
+            box-shadow: 0 0 15px var(--highlight);
+            transform: scale(0.9);
+        }
+
+        .controls {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button.load-btn {
+            background: #27ae60;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .step-counter {
+            font-family: 'Courier New', monospace;
+            font-size: 1.4em;
+            min-width: 120px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <textarea id="inputData" placeholder="Wklej log gry tutaj..."></textarea>
+        <button class="load-btn" onclick="parseGame()">Wczytaj Partię</button>
+
+        <div id="info-box">
+            <div id="info-text">Wklej dane i kliknij przycisk</div>
+            <div id="move-text"></div>
+        </div>
+
+        <div class="board-wrapper">
+            <div id="chess-board"></div>
+        </div>
+
+        <div class="controls">
+            <button onclick="prevStep()">◀ Lewo</button>
+            <span class="step-counter" id="stepCounter">0 / 0</span>
+            <button onclick="nextStep()">Prawo ▶</button>
+        </div>
+    </div>
+
+    <script>
+        let states = [];
+        let currentIdx = 0;
+
+        function parseGame() {
+            const input = document.getElementById('inputData').value;
+            if (!input.trim()) return;
+
+            const sections = input.split(/--- RUNDA \d+ ---|=== POCZĄTEK GRY ===/);
+
+            states = sections
+                .map(s => s.trim())
+                .filter(s => s.length > 0)
+                .map(s => {
+                    const lines = s.split('\n').map(l => l.trimEnd());
+                    const boardStartIndex = lines.findIndex(l => /^\d/.test(l.trim()));
+
+                    const meta = lines.slice(0, boardStartIndex).join(' ');
+                    const boardLines = lines.slice(boardStartIndex)
+                        .filter(l => /^\d/.test(l.trim()))
+                        .map(l => l.trim().split(/\s+/).slice(1));
+
+                    return {
+                        description: meta || "Pozycja startowa",
+                        grid: boardLines
+                    };
+                });
+
+            currentIdx = 0;
+            updateUI();
+        }
+
+        function updateUI() {
+            if (states.length === 0) return;
+
+            const state = states[currentIdx];
+            const boardDiv = document.getElementById('chess-board');
+            const rows = state.grid.length;
+            const cols = state.grid[0].length;
+
+            boardDiv.style.gridTemplateColumns = `repeat(${cols}, 60px)`;
+            boardDiv.innerHTML = '';
+
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    const sq = document.createElement('div');
+                    sq.className = `square ${(r + c) % 2 === 0 ? 'light' : 'dark'}`;
+
+                    const val = state.grid[r][c];
+                    if (val && val !== '_' && val !== '.' && val !== ' ') {
+                        const piece = document.createElement('div');
+                        piece.className = `piece ${val}`;
+                        if (val !== 'o') piece.textContent = val;
+                        sq.appendChild(piece);
+                    }
+                    boardDiv.appendChild(sq);
+                }
+            }
+
+            document.getElementById('move-text').textContent = state.description;
+            document.getElementById('info-text').textContent = currentIdx === 0 ? "Inicjalizacja" : `Runda ${currentIdx}`;
+            document.getElementById('stepCounter').textContent = `${currentIdx} / ${states.length - 1}`;
+        }
+
+        function nextStep() {
+            if (currentIdx < states.length - 1) {
+                currentIdx++;
+                updateUI();
+            }
+        }
+
+        function prevStep() {
+            if (currentIdx > 0) {
+                currentIdx--;
+                updateUI();
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowLeft") prevStep();
+            if (e.key === "ArrowRight") nextStep();
+        });
+    </script>
+
+</body>
+
+</html>

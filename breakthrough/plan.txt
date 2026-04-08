@@ -1,0 +1,73 @@
+Gra Breakthrough
+
+Klasy:
+1.Board.py
+Odpowiada za reprezentację planszy i logikę zasad gry.  Reprezentacja planszy ma mieć postać
+mlinii składających się z n oddzielonych spacjami liczbami– B oznacza krążek
+gracza pierwszego, W oznacza krążek gracza drugiego, _ oznacza pole puste, o
+oznacza pole z którego wykonany został ostatni ruch.
+
+
+__init__(selfn n=8, m=8, initial_state=None)
+Domyślnie plansza 8x8. i na początku dwa pierwsze rzędy pionów czarne, 2 ostatnie białe
+
+get_legal_moves(self, player):
+Zwraca listę wszystkich możliwych ruchów dla gracza (B lub W). Gracz może przesunąć jeden ze swoich
+pionków o jedno pole prosto, bądź po skosie, jeśli pole jest puste. Gracz może
+zbić sąsiadujący pionek przeciwnika i zająć jego miejsce tylko jeśli pion prze
+ciwnika znajduje się po skosie od pionka gracza.
+
+make_move(self, move): Tworzy nowy obiekt klasy Board z wykonanym ruchem (podejście niemutowalne ułatwia rekurencję w Minimaxie). Ważne, sprawdzaj też poprawność ruchu
+
+
+is_game_over(self): Sprawdza, czy gra się skończyła (czy jakiś pionek dotarł do przeciwległej krawędzi).
+
+get_winner(self): Zwraca informację, który gracz wygrał.
+
+print_board(self): Wypisuje planszę w czytelnej formie (np. z literami A-H i numerami 1-8).
+
+
+2. Klasy Heuristics (napisz interfejs, a potem 3 implementacje)
+Zawiera różne strategie oceny stanu planszy, gdy algorytm nie dotrze do liścia drzewa.
+
+material_advantage(board): Najprostsza ocena – różnica w liczbie pionków gracza i przeciwnika.
+
+positional_advance(board): Sumuje odległość pionków od linii mety. Im bliżej krawędzi przeciwnika, tym wyższa ocena.
+
+defensive_aggressive_mix(board): Kombinacja liczby pionków oraz ich "bezpieczeństwa" (np. premiowanie pionków, które nawzajem się osłaniają).
+
+
+3. Klasa AiAgent
+Serce algorytmu decyzyjnego
+
+.minimax(self, board, depth, is_maximizing): 
+Klasyczna rekurencyjna funkcja przeszukująca drzewo do głębokości 
+
+alpha_beta(self, board, depth, alpha, beta, is_maximizing):
+ Ulepszona wersja Minimaxa. Przekazuje wartości $\alpha$ i $\beta$, aby odcinać gałęzie drzewa, które nie wpłyną na ostateczną decyzję
+ 
+choose_move(self, board): 
+Metoda wywołująca alpha_beta i zwracająca najlepszy znaleziony ruch. Tutaj należy też zaimplementować licznik odwiedzonych węzłów.
+
+4. Klasa GameRunner
+Odpowiada za obsługę pętli gry
+
+Odpowiada za przebieg rozgrywki, I/O oraz pomiary czasu
+
+Dodaj parametr który obsłuży 2 tryby
+Wersja podstawowa– rozegrać całą grę przy użyciu algorytmu Minimax z
+perspektywy gracza pierwszego. Gracz drugi zawsze wykonuje optymalny
+ruch (obaj gracze używają tych samych heurystyk, więc przewidywania
+gracza pierwszego, co do ruchu przeciwnika są zawsze trafne).
+
+ Wersja rozszerzona (na dodatkowe 20 pkt.)– program zezwoli na grę mię
+dzy dwoma odrębnymi agentami (oponent nie zawsze musi działać opty
+malnie, gracze muszą zmieniać strategię adaptacyjnie w trakcie gry).
+
+.parse_input(self):
+ Wczytuje stan początkowy planszy, wybór heurystyki i parametr $d$ ze standardowego wejścia.
+ 
+ play_game(self):
+  Pętla główna gry. Naprzemiennie wywołuje ruchy graczy, aż do osiągnięcia stanu końca gry
+  
+  .print_results(self): Wypisuje końcową planszę, liczbę rund i zwycięzcę na stdout oraz statystyki (węzły, czas) na stderr.
