@@ -1,25 +1,3 @@
-"""
-game_runner.py – obsługa pętli gry, I/O oraz pomiarów czasu.
-
-Format wejścia (stdin):
-────────────────────────────────────────────────────────────────
-Linia 1:  tryb           ('basic' lub 'extended')
-Linia 2:  n m            (wymiary planszy, np. "8 8")
-Linia 3:  d              (głębokość przeszukiwania dla gracza B)
-Linia 4:  heurystyka_B   ('1'/'material', '2'/'positional', '3'/'mixed')
-[TYLKO tryb extended:]
-Linia 5:  d_W            (głębokość dla gracza W)
-Linia 6:  heurystyka_W
-[Opcjonalnie – stan początkowy planszy:]
-Kolejne linie: n linii po m tokenów opisujących planszę (B/W/_)
-────────────────────────────────────────────────────────────────
-
-Tryby:
-    basic    – obaj gracze korzystają z tych samych heurystyk;
-               gracz W zawsze gra optymalnie (przewidywania B są trafne).
-    extended – dwaj niezależni agenci z potencjalnie różnymi heurystykami
-               i głębokościami; oponent nie musi działać optymalnie.
-"""
 from __future__ import annotations
 
 import sys
@@ -42,10 +20,6 @@ class GameRunner:
         self.elapsed: float = 0.0
 
     def parse_input(self) -> None:
-        """
-        Interaktywnie wczytuje parametry gry z klawiatury.
-        Pyta użytkownika o każdy parametr z opisem.
-        """
         print("╔══════════════════════════════════════════╗")
         print("║        BREAKTHROUGH – konfiguracja       ║")
         print("╚══════════════════════════════════════════╝\n")
@@ -106,19 +80,18 @@ class GameRunner:
 
         print("Stan początkowy planszy:")
         print("  Enter        – domyślny układ startowy")
-        print("  własny układ – wpisz n linii po m tokenów (B/W/_), potem pustą linię")
+        print("  własny układ – wpisz n linii po m tokenów (B/W/_). Możesz zostawić puste (Enter). Wpisz 'q' by skończyć szybciej.")
         custom = input("Czy chcesz podać własny układ? [t/N]: ").strip().lower()
         print()
 
         if custom == 't':
-            print(f"Wpisz {n} wierszy po {m} tokenów (B W _), zakończ pustą linią:")
+            print(f"Wpisz {n} wierszy po {m} tokenów (B W _), 'q' kończy wczytywanie:")
             board_lines = []
             while len(board_lines) < n:
                 line = input(f"  wiersz {len(board_lines) + 1}/{n}: ").strip()
-                if line == '' and board_lines:
+                if line.lower() == 'q':
                     break
-                if line:
-                    board_lines.append(line)
+                board_lines.append(line)
             self.board = Board.from_text("\n".join(board_lines), n=n, m=m)
         else:
             self.board = Board(n=n, m=m)

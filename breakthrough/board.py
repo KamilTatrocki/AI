@@ -206,12 +206,22 @@ class Board:
         """
         Wczytuje planszę z tekstu (n linii po m tokenów).
         Symbole 'o' (ostatni ruch) zastępowane są przez '_'.
+        Brakujące tokeny w linii uzupełnia polem puste ('_').
         """
         rows = []
         for line in text.strip().splitlines():
-            cells = line.split()
+            # zbieramy znaki z pominięciem pociętych spacji (pozwala wpisać B B B jak i BBB)
+            cells = [char for char in line if not char.isspace()]
             row = [c if c in ('B', 'W') else Board.EMPTY for c in cells]
-            rows.append(row)
-        actual_n = len(rows)
-        actual_m = max(len(r) for r in rows) if rows else m
-        return Board(n=actual_n, m=actual_m, initial_state=rows)
+            
+            # uzupełnij linię do m pustymi polami
+            while len(row) < m:
+                row.append(Board.EMPTY)
+            
+            rows.append(row[:m])
+            
+        # w razie gdyby podano mniej niż n wierszy
+        while len(rows) < n:
+            rows.append([Board.EMPTY] * m)
+            
+        return Board(n=n, m=m, initial_state=rows[:n])
