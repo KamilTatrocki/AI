@@ -20,83 +20,46 @@ class GameRunner:
         self.elapsed: float = 0.0
 
     def parse_input(self) -> None:
-        print("╔══════════════════════════════════════════╗")
-        print("║        BREAKTHROUGH – konfiguracja       ║")
-        print("╚══════════════════════════════════════════╝\n")
-
-        print("Tryb gry:")
-        print("  basic    – obaj agenci używają tych samych heurystyk")
-        print("  extended – dwa niezależne agenty z różnymi ustawieniami")
-        mode_raw = input("Podaj tryb [basic/extended] (Enter = basic): ").strip().lower()
+        mode_raw = input("Tryb gry [basic/extended]: ").strip().lower()
         self.mode = mode_raw if mode_raw in ('basic', 'extended') else 'basic'
-        print("Wybrales: ", self.mode)
-        print()
 
-        print("Algorytm przeszukiwania:")
-        print("  1 / alpha-beta – Minimax z przycinaniem Alpha-Beta (szybszy)")
-        print("  2 / minimax    – Czysty Minimax (wolniejszy, bez przycinania)")
-        algo_raw = input("Wybierz algorytm [1/2] (Enter = 1, czyli Alpha-Beta): ").strip()
+        algo_raw = input("Algorytm [1-AlphaBeta/2-Minimax]: ").strip()
         use_alpha_beta = (algo_raw != '2')
-        print("Wybrales:", "Alpha-Beta" if use_alpha_beta else "Minimax")
-        print()
 
-        print("Wymiary planszy (min. 4x4, domyślnie 8x8):")
-        dims_raw = input("Podaj n m (np. '8 8', Enter = 8 8): ").strip().split()
+        dims_raw = input("Wymiary planszy [n m]: ").strip().split()
         if len(dims_raw) >= 2:
             n, m = int(dims_raw[0]), int(dims_raw[1])
         else:
             n, m = 8, 8
-        print()
 
-        print("═══ Agent B (Czarny – startuje od góry) ═══")
-        d_b_raw = input("Głębokość przeszukiwania d [1-6] (Enter = 3): ").strip()
+        d_b_raw = input("Głębokość Agent B: ").strip()
         d_b = int(d_b_raw) if d_b_raw.isdigit() else 3
 
-        print("Heurystyka:")
-        print("  1 / material   – przewaga materiałowa (liczba pionków)")
-        print("  2 / positional – zaawansowanie pozycyjne (odległość od mety)")
-        print("  3 / mixed      – kombinacja materiału, pozycji i bezpieczeństwa")
-        heur_b_key = input("Wybierz heurystykę [1/2/3] (Enter = 1): ").strip() or '1'
+        heur_b_key = input("Heurystyka B [1-mat/2-pos/3-mix]: ").strip() or '1'
         heur_b = HEURISTICS.get(heur_b_key, MaterialAdvantage())
         self.agent_b = AiAgent(Board.B, d_b, heur_b, use_alpha_beta)
-        print()
 
         if self.mode == 'extended':
-            print("═══ Agent W (Biały – startuje od dołu) ═══")
-            d_w_raw = input("Głębokość przeszukiwania d [1-6] (Enter = 3): ").strip()
+            d_w_raw = input("Głębokość Agent W: ").strip()
             d_w = int(d_w_raw) if d_w_raw.isdigit() else 3
 
-            print("Heurystyka:")
-            print("  1 / material   – przewaga materiałowa")
-            print("  2 / positional – zaawansowanie pozycyjne")
-            print("  3 / mixed      – kombinacja (materiał + pozycja + bezpieczeństwo)")
-            heur_w_key = input("Wybierz heurystykę [1/2/3] (Enter = 1): ").strip() or '1'
+            heur_w_key = input("Heurystyka W [1-mat/2-pos/3-mix]: ").strip() or '1'
             heur_w = HEURISTICS.get(heur_w_key, MaterialAdvantage())
             self.agent_w = AiAgent(Board.W, d_w, heur_w, use_alpha_beta)
         else:
-            # W trybie basic agent W używa tych samych ustawień co B
             self.agent_w = AiAgent(Board.W, d_b, heur_b, use_alpha_beta)
-        print()
 
-        print("Stan początkowy planszy:")
-        print("  Enter        – domyślny układ startowy")
-        print("  własny układ – wpisz n linii po m tokenów (B/W/_). Możesz zostawić puste (Enter). Wpisz 'q' by skończyć szybciej.")
-        custom = input("Czy chcesz podać własny układ? [t/N]: ").strip().lower()
-        print()
-
+        custom = input("Własna plansza? [t/N]: ").strip().lower()
         if custom == 't':
-            print(f"Wpisz {n} wierszy po {m} tokenów (B W _), 'q' kończy wczytywanie:")
             board_lines = []
             while len(board_lines) < n:
-                line = input(f"  wiersz {len(board_lines) + 1}/{n}: ").strip()
+                line = input().strip()
                 if line.lower() == 'q':
                     break
                 board_lines.append(line)
             self.board = Board.from_text("\n".join(board_lines), n=n, m=m)
         else:
             self.board = Board(n=n, m=m)
-
-        print("Konfiguracja zakończona. Startujemy!\n")
 
     def play_game(self) -> None:
         assert self.board is not None, "Wywołaj parse_input() przed play_game()."
