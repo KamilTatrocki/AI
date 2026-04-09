@@ -13,7 +13,6 @@ from board import Board
 
 
 class Heuristic(ABC):
-    """Interfejs heurystyki oceniającej stan planszy."""
 
     @abstractmethod
     def evaluate(self, board: Board, player: str) -> float:
@@ -27,13 +26,8 @@ class Heuristic(ABC):
     def name(self) -> str:
         """Zwraca nazwę heurystyki."""
 
-
-
-
 class MaterialAdvantage(Heuristic):
-    """
-    Najprostsza ocena – różnica w liczbie pionków gracza i przeciwnika.
-    """
+
 
     @property
     def name(self) -> str:
