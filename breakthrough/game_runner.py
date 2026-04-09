@@ -145,7 +145,7 @@ class GameRunner:
             if move is None:
                 break  # brak ruchów = przegrana tego gracza
 
-            # Format move details
+            
             (fr, fc), (tr, tc) = move
             from_pos = f"{chr(ord('A') + fc)}{fr + 1}"
             to_pos = f"{chr(ord('A') + tc)}{tr + 1}"
@@ -154,7 +154,7 @@ class GameRunner:
             self.board = self.board.make_move(move)
             self.rounds += 1
 
-            # Zapis do pliku tekstowego
+     
             with open("last_game.txt", "a", encoding="utf-8") as f:
                 f.write(f"--- RUNDA {self.rounds} ---\n")
                 f.write(f"Ruch wykonał: {player_name}\n")
