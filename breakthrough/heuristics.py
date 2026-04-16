@@ -1,34 +1,20 @@
-"""
-heuristics.py – interfejs Heuristic i trzy jego implementacje.
-
-Wynik evaluate() jest zawsze z perspektywy podanego gracza:
-    dodatni  → stan korzystny dla 'player'
-    ujemny   → stan niekorzystny dla 'player'
-"""
 from __future__ import annotations
-
 from abc import ABC, abstractmethod
-
 from board import Board
 
-
 class Heuristic(ABC):
-
     @abstractmethod
     def evaluate(self, board: Board, player: str) -> float:
         """
-        Zwraca ocenę stanu `board` z perspektywy `player`.
-        Wyższy wynik = lepszy stan dla `player`.
+        im wyzej tym lepiej
         """
 
     @property
     @abstractmethod
     def name(self) -> str:
-        """Zwraca nazwę heurystyki."""
+        """nazwa"""
 
 class MaterialAdvantage(Heuristic):
-
-
     @property
     def name(self) -> str:
         return "material_advantage"
@@ -41,13 +27,8 @@ class MaterialAdvantage(Heuristic):
 
 
 class PositionalAdvance(Heuristic):
-    """
-    Sumuje odległość pionków od linii mety.
-    Im bliżej krawędzi przeciwnika, tym wyższa ocena.
-
-    B dąży do rzędu n-1  → zaawansowanie = r        (0 … n-1)
-    W dąży do rzędu 0    → zaawansowanie = (n-1 - r) (0 … n-1)
-    """
+    def __init__(self, alpha: float = 1.5) -> None:
+        self._alpha = alpha
 
     @property
     def name(self) -> str:
@@ -61,10 +42,12 @@ class PositionalAdvance(Heuristic):
             for c in range(board.m):
                 piece = board.cell(r, c)
                 if piece == Board.B:
-                    advance = r  # im wyższy wiersz, tym bliżej mety dla B
+                    advance = r  
+                    advance *= self._alpha
                     score += advance if player == Board.B else -advance
                 elif piece == Board.W:
-                    advance = n - 1 - r  # im niższy wiersz, tym bliżej mety dla W
+                    advance = n - 1 - r  
+                    advance *= self._alpha
                     score += advance if player == Board.W else -advance
         return score
 
@@ -72,13 +55,7 @@ class PositionalAdvance(Heuristic):
 
 class DefensiveAggressiveMix(Heuristic):
     """
-    Kombinacja liczby pionków oraz ich "bezpieczeństwa".
-
-    Składniki:
-        α · materiał  +  β · zaawansowanie  +  γ · bezpieczeństwo
-
-    Bezpieczeństwo: pionek jest chroniony, gdy co najmniej jeden sojusznik
-    stoi skośnie z tyłu (osłania go przed biciem).
+    alpha · materiał  +  beta · zaawansowanie  +  gamma · bezpieczeństwo
     """
 
     def __init__(
@@ -97,7 +74,6 @@ class DefensiveAggressiveMix(Heuristic):
 
     @staticmethod
     def _safety_score(board: Board, player: str) -> float:
-        """Liczba własnych pionków osłanianych przez sojusznika."""
         direction = Board._direction(player)
         protected = 0
         for r in range(board.n):
@@ -117,7 +93,7 @@ class DefensiveAggressiveMix(Heuristic):
     def evaluate(self, board: Board, player: str) -> float:
         opponent = Board.W if player == Board.B else Board.B
 
-        mat = board.count(player) - board.count(opponent)
+        mat = MaterialAdvantage().evaluate(board, player)
         pos = PositionalAdvance().evaluate(board, player)
         safety = self._safety_score(board, player) - self._safety_score(board, opponent)
 

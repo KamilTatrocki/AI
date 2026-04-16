@@ -76,7 +76,7 @@ class AiAgent:
                 value = max(value, self.alpha_beta(board.make_move(move), depth - 1, alpha, beta, False))
                 alpha = max(alpha, value)
                 if alpha >= beta:
-                    break  # β-cięcie
+                    break  
             return value
         else:
             value = math.inf
@@ -84,7 +84,7 @@ class AiAgent:
                 value = min(value, self.alpha_beta(board.make_move(move), depth - 1, alpha, beta, True))
                 beta = min(beta, value)
                 if beta <= alpha:
-                    break  # α-cięcie
+                    break  
             return value
 
 
