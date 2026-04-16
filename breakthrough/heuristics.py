@@ -90,7 +90,20 @@ class DefensiveAggressiveMix(Heuristic):
                         break
         return float(protected)
 
+    def _evaluate_params_value(self, board: Board) -> None:
+        board_cells = board.n * board.m
+        current_pieces = board.count(Board.B) + board.count(Board.W)
+        
+        progress = 1.0 - (current_pieces / board_cells) if board_cells > 0 else 1.0
+        progress = max(0.0, min(1.0, progress))
+        
+        self._alpha = 3.0 - (1.0 * progress)  
+        self._beta = 1.5 + (2.5 * progress)   
+        self._gamma = 0.5 - (0.4 * progress)  
+
     def evaluate(self, board: Board, player: str) -> float:
+        self._evaluate_params_value(board)
+
         opponent = Board.W if player == Board.B else Board.B
 
         mat = MaterialAdvantage().evaluate(board, player)
