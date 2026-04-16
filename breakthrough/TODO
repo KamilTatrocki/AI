@@ -1,6 +1,3 @@
 po co jest to 
     WIN_SCORE  =  10_000_000.0
     LOSS_SCORE = -10_000_000.0
-
-
-nie pyta czy uzywac min max czy alpha beta

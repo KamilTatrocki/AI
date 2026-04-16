@@ -21,7 +21,7 @@ class GameRunner:
 
     def parse_input(self) -> None:
         mode_raw = input("Tryb gry [basic/extended]: ").strip().lower()
-        self.mode = mode_raw if mode_raw in ('basic', 'extended') else 'basic'
+        self.mode = mode_raw if mode_raw in ('basic', 'extended') else 'extended'
 
         algo_raw = input("Algorytm [1-AlphaBeta/2-Minimax]: ").strip()
         use_alpha_beta = (algo_raw != '2')
@@ -35,7 +35,7 @@ class GameRunner:
         d_b_raw = input("Głębokość Agent B: ").strip()
         d_b = int(d_b_raw) if d_b_raw.isdigit() else 3
 
-        heur_b_key = input("Heurystyka B [1-mat/2-pos/3-mix]: ").strip() or '1'
+        heur_b_key = input("Heurystyka B [1-mat/2-pos/3-mix]: ").strip() or '3'
         heur_b = HEURISTICS.get(heur_b_key, MaterialAdvantage())
         self.agent_b = AiAgent(Board.B, d_b, heur_b, use_alpha_beta)
 
@@ -64,7 +64,7 @@ class GameRunner:
     def play_game(self) -> None:
         assert self.board is not None, "Wywołaj parse_input() przed play_game()."
 
-        current_player = Board.B  # B zaczyna
+        current_player = Board.W  
         self.rounds = 0
         self.total_nodes = 0
         start_time = time.perf_counter()
