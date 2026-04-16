@@ -61,11 +61,11 @@ class Board:
                         continue
                     dest = self._grid[new_row][new_col]
                     if dc == 0:
-                        # ruch prosty – tylko puste pole
+                        # ruch prosty
                         if dest == self.EMPTY:
                             moves.append(((row, col), (new_row, new_col)))
                     else:
-                        # ruch skośny – puste LUB bicie przeciwnika
+                        # ruch skośny
                         if dest != player:
                             moves.append(((row, col), (new_row, new_col)))
         return moves
@@ -125,8 +125,6 @@ class Board:
 
     def print_board(self) -> None:
         print(self.get_board_string())
-
-
 
     def cell(self, row: int, col: int) -> str:
         return self._grid[row][col]

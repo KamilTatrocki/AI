@@ -61,8 +61,8 @@ class DefensiveAggressiveMix(Heuristic):
     def __init__(
         self,
         alpha: float = 3.0,
-        beta: float = 1.5,
-        gamma: float = 0.5,
+        beta: float = 0.5,
+        gamma: float = 10.0,
     ) -> None:
         self._alpha = alpha
         self._beta = beta
@@ -97,9 +97,9 @@ class DefensiveAggressiveMix(Heuristic):
         progress = 1.0 - (current_pieces / board_cells) if board_cells > 0 else 1.0
         progress = max(0.0, min(1.0, progress))
         
-        self._alpha = 3.0 - (1.0 * progress)  
-        self._beta = 1.5 + (2.5 * progress)   
-        self._gamma = 0.5 - (0.4 * progress)  
+        self._alpha = 3.0 - (2.0 * progress)  
+        self._beta = 0.5 + (5.0 * progress)   
+        self._gamma = 10.0 - (5.0 * progress)  
 
     def evaluate(self, board: Board, player: str) -> float:
         self._evaluate_params_value(board)

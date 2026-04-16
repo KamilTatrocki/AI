@@ -81,12 +81,12 @@ Plansza po ruchu:
 
 --- RUNDA 6 ---
 Ruch wykonał: Agent B (Czarny)
-Ruch: A2 -> B3 (z 1,0 do 2,1)
+Ruch: C2 -> C3 (z 1,2 do 2,2)
 Plansza po ruchu:
   A B C D E F G H
 1 _ B B B B B B B
-2 o B B B B B B B
-3 B B _ _ _ _ _ _
+2 B B o B B B B B
+3 B _ B _ _ _ _ _
 4 W _ _ _ _ _ _ _
 5 _ _ _ _ _ _ _ _
 6 _ _ _ _ _ _ _ _
@@ -95,81 +95,81 @@ Plansza po ruchu:
 
 --- RUNDA 7 ---
 Ruch wykonał: Agent W (Biały)
-Ruch: A4 -> B3 (z 3,0 do 2,1)
-Plansza po ruchu:
-  A B C D E F G H
-1 _ B B B B B B B
-2 _ B B B B B B B
-3 B W _ _ _ _ _ _
-4 o _ _ _ _ _ _ _
-5 _ _ _ _ _ _ _ _
-6 _ _ _ _ _ _ _ _
-7 _ W W W W W W W
-8 W W W W W W W W
-
---- RUNDA 8 ---
-Ruch wykonał: Agent B (Czarny)
-Ruch: C2 -> B3 (z 1,2 do 2,1)
-Plansza po ruchu:
-  A B C D E F G H
-1 _ B B B B B B B
-2 _ B o B B B B B
-3 B B _ _ _ _ _ _
-4 _ _ _ _ _ _ _ _
-5 _ _ _ _ _ _ _ _
-6 _ _ _ _ _ _ _ _
-7 _ W W W W W W W
-8 W W W W W W W W
-
---- RUNDA 9 ---
-Ruch wykonał: Agent W (Biały)
 Ruch: B7 -> A6 (z 6,1 do 5,0)
 Plansza po ruchu:
   A B C D E F G H
 1 _ B B B B B B B
-2 _ B _ B B B B B
-3 B B _ _ _ _ _ _
-4 _ _ _ _ _ _ _ _
+2 B B _ B B B B B
+3 B _ B _ _ _ _ _
+4 W _ _ _ _ _ _ _
 5 _ _ _ _ _ _ _ _
 6 W _ _ _ _ _ _ _
 7 _ o W W W W W W
 8 W W W W W W W W
 
---- RUNDA 10 ---
+--- RUNDA 8 ---
 Ruch wykonał: Agent B (Czarny)
 Ruch: B1 -> C2 (z 0,1 do 1,2)
 Plansza po ruchu:
   A B C D E F G H
 1 _ o B B B B B B
-2 _ B B B B B B B
-3 B B _ _ _ _ _ _
-4 _ _ _ _ _ _ _ _
+2 B B B B B B B B
+3 B _ B _ _ _ _ _
+4 W _ _ _ _ _ _ _
 5 _ _ _ _ _ _ _ _
 6 W _ _ _ _ _ _ _
 7 _ _ W W W W W W
 8 W W W W W W W W
 
---- RUNDA 11 ---
+--- RUNDA 9 ---
 Ruch wykonał: Agent W (Biały)
 Ruch: A6 -> A5 (z 5,0 do 4,0)
 Plansza po ruchu:
   A B C D E F G H
 1 _ _ B B B B B B
-2 _ B B B B B B B
-3 B B _ _ _ _ _ _
-4 _ _ _ _ _ _ _ _
+2 B B B B B B B B
+3 B _ B _ _ _ _ _
+4 W _ _ _ _ _ _ _
 5 W _ _ _ _ _ _ _
 6 o _ _ _ _ _ _ _
 7 _ _ W W W W W W
 8 W W W W W W W W
 
---- RUNDA 12 ---
+--- RUNDA 10 ---
 Ruch wykonał: Agent B (Czarny)
-Ruch: D2 -> C3 (z 1,3 do 2,2)
+Ruch: A2 -> B3 (z 1,0 do 2,1)
 Plansza po ruchu:
   A B C D E F G H
 1 _ _ B B B B B B
-2 _ B B o B B B B
+2 o B B B B B B B
+3 B B B _ _ _ _ _
+4 W _ _ _ _ _ _ _
+5 W _ _ _ _ _ _ _
+6 _ _ _ _ _ _ _ _
+7 _ _ W W W W W W
+8 W W W W W W W W
+
+--- RUNDA 11 ---
+Ruch wykonał: Agent W (Biały)
+Ruch: A4 -> B3 (z 3,0 do 2,1)
+Plansza po ruchu:
+  A B C D E F G H
+1 _ _ B B B B B B
+2 _ B B B B B B B
+3 B W B _ _ _ _ _
+4 o _ _ _ _ _ _ _
+5 W _ _ _ _ _ _ _
+6 _ _ _ _ _ _ _ _
+7 _ _ W W W W W W
+8 W W W W W W W W
+
+--- RUNDA 12 ---
+Ruch wykonał: Agent B (Czarny)
+Ruch: C2 -> B3 (z 1,2 do 2,1)
+Plansza po ruchu:
+  A B C D E F G H
+1 _ _ B B B B B B
+2 _ B o B B B B B
 3 B B B _ _ _ _ _
 4 _ _ _ _ _ _ _ _
 5 W _ _ _ _ _ _ _
@@ -183,7 +183,7 @@ Ruch: C7 -> B6 (z 6,2 do 5,1)
 Plansza po ruchu:
   A B C D E F G H
 1 _ _ B B B B B B
-2 _ B B _ B B B B
+2 _ B _ B B B B B
 3 B B B _ _ _ _ _
 4 _ _ _ _ _ _ _ _
 5 W _ _ _ _ _ _ _
@@ -193,12 +193,12 @@ Plansza po ruchu:
 
 --- RUNDA 14 ---
 Ruch wykonał: Agent B (Czarny)
-Ruch: A3 -> B4 (z 2,0 do 3,1)
+Ruch: B3 -> B4 (z 2,1 do 3,1)
 Plansza po ruchu:
   A B C D E F G H
 1 _ _ B B B B B B
-2 _ B B _ B B B B
-3 o B B _ _ _ _ _
+2 _ B _ B B B B B
+3 B o B _ _ _ _ _
 4 _ B _ _ _ _ _ _
 5 W _ _ _ _ _ _ _
 6 _ W _ _ _ _ _ _
@@ -207,13 +207,13 @@ Plansza po ruchu:
 
 --- RUNDA 15 ---
 Ruch wykonał: Agent W (Biały)
-Ruch: A5 -> B4 (z 4,0 do 3,1)
+Ruch: A5 -> A4 (z 4,0 do 3,0)
 Plansza po ruchu:
   A B C D E F G H
 1 _ _ B B B B B B
-2 _ B B _ B B B B
-3 _ B B _ _ _ _ _
-4 _ W _ _ _ _ _ _
+2 _ B _ B B B B B
+3 B _ B _ _ _ _ _
+4 W B _ _ _ _ _ _
 5 o _ _ _ _ _ _ _
 6 _ W _ _ _ _ _ _
 7 _ _ _ W W W W W
@@ -221,13 +221,13 @@ Plansza po ruchu:
 
 --- RUNDA 16 ---
 Ruch wykonał: Agent B (Czarny)
-Ruch: C3 -> B4 (z 2,2 do 3,1)
+Ruch: D1 -> C2 (z 0,3 do 1,2)
 Plansza po ruchu:
   A B C D E F G H
-1 _ _ B B B B B B
-2 _ B B _ B B B B
-3 _ B o _ _ _ _ _
-4 _ B _ _ _ _ _ _
+1 _ _ B o B B B B
+2 _ B B B B B B B
+3 B _ B _ _ _ _ _
+4 W B _ _ _ _ _ _
 5 _ _ _ _ _ _ _ _
 6 _ W _ _ _ _ _ _
 7 _ _ _ W W W W W
@@ -238,10 +238,10 @@ Ruch wykonał: Agent W (Biały)
 Ruch: B6 -> B5 (z 5,1 do 4,1)
 Plansza po ruchu:
   A B C D E F G H
-1 _ _ B B B B B B
-2 _ B B _ B B B B
-3 _ B _ _ _ _ _ _
-4 _ B _ _ _ _ _ _
+1 _ _ B _ B B B B
+2 _ B B B B B B B
+3 B _ B _ _ _ _ _
+4 W B _ _ _ _ _ _
 5 _ W _ _ _ _ _ _
 6 _ o _ _ _ _ _ _
 7 _ _ _ W W W W W
@@ -249,13 +249,13 @@ Plansza po ruchu:
 
 --- RUNDA 18 ---
 Ruch wykonał: Agent B (Czarny)
-Ruch: C1 -> D2 (z 0,2 do 1,3)
+Ruch: B2 -> B3 (z 1,1 do 2,1)
 Plansza po ruchu:
   A B C D E F G H
-1 _ _ o B B B B B
-2 _ B B B B B B B
-3 _ B _ _ _ _ _ _
-4 _ B _ _ _ _ _ _
+1 _ _ B _ B B B B
+2 _ o B B B B B B
+3 B B B _ _ _ _ _
+4 W B _ _ _ _ _ _
 5 _ W _ _ _ _ _ _
 6 _ _ _ _ _ _ _ _
 7 _ _ _ W W W W W
@@ -263,111 +263,111 @@ Plansza po ruchu:
 
 --- RUNDA 19 ---
 Ruch wykonał: Agent W (Biały)
+Ruch: A4 -> B3 (z 3,0 do 2,1)
+Plansza po ruchu:
+  A B C D E F G H
+1 _ _ B _ B B B B
+2 _ _ B B B B B B
+3 B W B _ _ _ _ _
+4 o B _ _ _ _ _ _
+5 _ W _ _ _ _ _ _
+6 _ _ _ _ _ _ _ _
+7 _ _ _ W W W W W
+8 W W W W W W W W
+
+--- RUNDA 20 ---
+Ruch wykonał: Agent B (Czarny)
+Ruch: C2 -> B3 (z 1,2 do 2,1)
+Plansza po ruchu:
+  A B C D E F G H
+1 _ _ B _ B B B B
+2 _ _ o B B B B B
+3 B B B _ _ _ _ _
+4 _ B _ _ _ _ _ _
+5 _ W _ _ _ _ _ _
+6 _ _ _ _ _ _ _ _
+7 _ _ _ W W W W W
+8 W W W W W W W W
+
+--- RUNDA 21 ---
+Ruch wykonał: Agent W (Biały)
 Ruch: D7 -> C6 (z 6,3 do 5,2)
 Plansza po ruchu:
   A B C D E F G H
-1 _ _ _ B B B B B
-2 _ B B B B B B B
-3 _ B _ _ _ _ _ _
+1 _ _ B _ B B B B
+2 _ _ _ B B B B B
+3 B B B _ _ _ _ _
 4 _ B _ _ _ _ _ _
 5 _ W _ _ _ _ _ _
 6 _ _ W _ _ _ _ _
 7 _ _ _ o W W W W
 8 W W W W W W W W
 
---- RUNDA 20 ---
+--- RUNDA 22 ---
 Ruch wykonał: Agent B (Czarny)
-Ruch: B2 -> C3 (z 1,1 do 2,2)
+Ruch: A3 -> A4 (z 2,0 do 3,0)
 Plansza po ruchu:
   A B C D E F G H
-1 _ _ _ B B B B B
-2 _ o B B B B B B
-3 _ B B _ _ _ _ _
-4 _ B _ _ _ _ _ _
+1 _ _ B _ B B B B
+2 _ _ _ B B B B B
+3 o B B _ _ _ _ _
+4 B B _ _ _ _ _ _
 5 _ W _ _ _ _ _ _
 6 _ _ W _ _ _ _ _
 7 _ _ _ _ W W W W
 8 W W W W W W W W
 
---- RUNDA 21 ---
-Ruch wykonał: Agent W (Biały)
-Ruch: C6 -> D5 (z 5,2 do 4,3)
-Plansza po ruchu:
-  A B C D E F G H
-1 _ _ _ B B B B B
-2 _ _ B B B B B B
-3 _ B B _ _ _ _ _
-4 _ B _ _ _ _ _ _
-5 _ W _ W _ _ _ _
-6 _ _ o _ _ _ _ _
-7 _ _ _ _ W W W W
-8 W W W W W W W W
-
---- RUNDA 22 ---
-Ruch wykonał: Agent B (Czarny)
-Ruch: C3 -> C4 (z 2,2 do 3,2)
-Plansza po ruchu:
-  A B C D E F G H
-1 _ _ _ B B B B B
-2 _ _ B B B B B B
-3 _ B o _ _ _ _ _
-4 _ B B _ _ _ _ _
-5 _ W _ W _ _ _ _
-6 _ _ _ _ _ _ _ _
-7 _ _ _ _ W W W W
-8 W W W W W W W W
-
 --- RUNDA 23 ---
 Ruch wykonał: Agent W (Biały)
-Ruch: B5 -> C4 (z 4,1 do 3,2)
+Ruch: B5 -> A4 (z 4,1 do 3,0)
 Plansza po ruchu:
   A B C D E F G H
-1 _ _ _ B B B B B
-2 _ _ B B B B B B
-3 _ B _ _ _ _ _ _
-4 _ B W _ _ _ _ _
-5 _ o _ W _ _ _ _
-6 _ _ _ _ _ _ _ _
+1 _ _ B _ B B B B
+2 _ _ _ B B B B B
+3 _ B B _ _ _ _ _
+4 W B _ _ _ _ _ _
+5 _ o _ _ _ _ _ _
+6 _ _ W _ _ _ _ _
 7 _ _ _ _ W W W W
 8 W W W W W W W W
 
 --- RUNDA 24 ---
 Ruch wykonał: Agent B (Czarny)
-Ruch: D2 -> C3 (z 1,3 do 2,2)
+Ruch: B3 -> A4 (z 2,1 do 3,0)
 Plansza po ruchu:
   A B C D E F G H
-1 _ _ _ B B B B B
-2 _ _ B o B B B B
-3 _ B B _ _ _ _ _
-4 _ B W _ _ _ _ _
-5 _ _ _ W _ _ _ _
-6 _ _ _ _ _ _ _ _
+1 _ _ B _ B B B B
+2 _ _ _ B B B B B
+3 _ o B _ _ _ _ _
+4 B B _ _ _ _ _ _
+5 _ _ _ _ _ _ _ _
+6 _ _ W _ _ _ _ _
 7 _ _ _ _ W W W W
 8 W W W W W W W W
 
 --- RUNDA 25 ---
 Ruch wykonał: Agent W (Biały)
-Ruch: C4 -> B3 (z 3,2 do 2,1)
+Ruch: C6 -> D5 (z 5,2 do 4,3)
 Plansza po ruchu:
   A B C D E F G H
-1 _ _ _ B B B B B
-2 _ _ B _ B B B B
-3 _ W B _ _ _ _ _
-4 _ B o _ _ _ _ _
+1 _ _ B _ B B B B
+2 _ _ _ B B B B B
+3 _ _ B _ _ _ _ _
+4 B B _ _ _ _ _ _
 5 _ _ _ W _ _ _ _
-6 _ _ _ _ _ _ _ _
+6 _ _ o _ _ _ _ _
 7 _ _ _ _ W W W W
 8 W W W W W W W W
 
 --- RUNDA 26 ---
 Ruch wykonał: Agent B (Czarny)
-Ruch: C2 -> B3 (z 1,2 do 2,1)
+Ruch: C1 -> B2 (z 0,2 do 1,1)
 Plansza po ruchu:
   A B C D E F G H
-1 _ _ _ B B B B B
-2 _ _ o _ B B B B
-3 _ B B _ _ _ _ _
-4 _ B _ _ _ _ _ _
+1 _ _ o _ B B B B
+2 _ B _ B B B B B
+3 _ _ B _ _ _ _ _
+4 B B _ _ _ _ _ _
 5 _ _ _ W _ _ _ _
 6 _ _ _ _ _ _ _ _
 7 _ _ _ _ W W W W
@@ -375,13 +375,13 @@ Plansza po ruchu:
 
 --- RUNDA 27 ---
 Ruch wykonał: Agent W (Biały)
-Ruch: D5 -> E4 (z 4,3 do 3,4)
+Ruch: D5 -> C4 (z 4,3 do 3,2)
 Plansza po ruchu:
   A B C D E F G H
-1 _ _ _ B B B B B
-2 _ _ _ _ B B B B
-3 _ B B _ _ _ _ _
-4 _ B _ _ W _ _ _
+1 _ _ _ _ B B B B
+2 _ B _ B B B B B
+3 _ _ B _ _ _ _ _
+4 B B W _ _ _ _ _
 5 _ _ _ o _ _ _ _
 6 _ _ _ _ _ _ _ _
 7 _ _ _ _ W W W W
@@ -389,13 +389,13 @@ Plansza po ruchu:
 
 --- RUNDA 28 ---
 Ruch wykonał: Agent B (Czarny)
-Ruch: G2 -> F3 (z 1,6 do 2,5)
+Ruch: D2 -> D3 (z 1,3 do 2,3)
 Plansza po ruchu:
   A B C D E F G H
-1 _ _ _ B B B B B
-2 _ _ _ _ B B o B
-3 _ B B _ _ B _ _
-4 _ B _ _ W _ _ _
+1 _ _ _ _ B B B B
+2 _ B _ o B B B B
+3 _ _ B B _ _ _ _
+4 B B W _ _ _ _ _
 5 _ _ _ _ _ _ _ _
 6 _ _ _ _ _ _ _ _
 7 _ _ _ _ W W W W
@@ -403,13 +403,13 @@ Plansza po ruchu:
 
 --- RUNDA 29 ---
 Ruch wykonał: Agent W (Biały)
-Ruch: E4 -> F3 (z 3,4 do 2,5)
+Ruch: C4 -> B3 (z 3,2 do 2,1)
 Plansza po ruchu:
   A B C D E F G H
-1 _ _ _ B B B B B
-2 _ _ _ _ B B _ B
-3 _ B B _ _ W _ _
-4 _ B _ _ o _ _ _
+1 _ _ _ _ B B B B
+2 _ B _ _ B B B B
+3 _ W B B _ _ _ _
+4 B B o _ _ _ _ _
 5 _ _ _ _ _ _ _ _
 6 _ _ _ _ _ _ _ _
 7 _ _ _ _ W W W W
@@ -417,13 +417,13 @@ Plansza po ruchu:
 
 --- RUNDA 30 ---
 Ruch wykonał: Agent B (Czarny)
-Ruch: E2 -> F3 (z 1,4 do 2,5)
+Ruch: E1 -> D2 (z 0,4 do 1,3)
 Plansza po ruchu:
   A B C D E F G H
-1 _ _ _ B B B B B
-2 _ _ _ _ o B _ B
-3 _ B B _ _ B _ _
-4 _ B _ _ _ _ _ _
+1 _ _ _ _ o B B B
+2 _ B _ B B B B B
+3 _ W B B _ _ _ _
+4 B B _ _ _ _ _ _
 5 _ _ _ _ _ _ _ _
 6 _ _ _ _ _ _ _ _
 7 _ _ _ _ W W W W
@@ -431,351 +431,43 @@ Plansza po ruchu:
 
 --- RUNDA 31 ---
 Ruch wykonał: Agent W (Biały)
-Ruch: E7 -> D6 (z 6,4 do 5,3)
+Ruch: B3 -> A2 (z 2,1 do 1,0)
 Plansza po ruchu:
   A B C D E F G H
-1 _ _ _ B B B B B
-2 _ _ _ _ _ B _ B
-3 _ B B _ _ B _ _
-4 _ B _ _ _ _ _ _
+1 _ _ _ _ _ B B B
+2 W B _ B B B B B
+3 _ o B B _ _ _ _
+4 B B _ _ _ _ _ _
 5 _ _ _ _ _ _ _ _
-6 _ _ _ W _ _ _ _
-7 _ _ _ _ o W W W
+6 _ _ _ _ _ _ _ _
+7 _ _ _ _ W W W W
 8 W W W W W W W W
 
 --- RUNDA 32 ---
 Ruch wykonał: Agent B (Czarny)
-Ruch: D1 -> D2 (z 0,3 do 1,3)
+Ruch: B2 -> A3 (z 1,1 do 2,0)
 Plansza po ruchu:
   A B C D E F G H
-1 _ _ _ o B B B B
-2 _ _ _ B _ B _ B
-3 _ B B _ _ B _ _
-4 _ B _ _ _ _ _ _
+1 _ _ _ _ _ B B B
+2 W o _ B B B B B
+3 B _ B B _ _ _ _
+4 B B _ _ _ _ _ _
 5 _ _ _ _ _ _ _ _
-6 _ _ _ W _ _ _ _
-7 _ _ _ _ _ W W W
+6 _ _ _ _ _ _ _ _
+7 _ _ _ _ W W W W
 8 W W W W W W W W
 
 --- RUNDA 33 ---
 Ruch wykonał: Agent W (Biały)
-Ruch: D6 -> D5 (z 5,3 do 4,3)
+Ruch: A2 -> A1 (z 1,0 do 0,0)
 Plansza po ruchu:
   A B C D E F G H
-1 _ _ _ _ B B B B
-2 _ _ _ B _ B _ B
-3 _ B B _ _ B _ _
-4 _ B _ _ _ _ _ _
-5 _ _ _ W _ _ _ _
-6 _ _ _ o _ _ _ _
-7 _ _ _ _ _ W W W
-8 W W W W W W W W
-
---- RUNDA 34 ---
-Ruch wykonał: Agent B (Czarny)
-Ruch: E1 -> E2 (z 0,4 do 1,4)
-Plansza po ruchu:
-  A B C D E F G H
-1 _ _ _ _ o B B B
-2 _ _ _ B B B _ B
-3 _ B B _ _ B _ _
-4 _ B _ _ _ _ _ _
-5 _ _ _ W _ _ _ _
-6 _ _ _ _ _ _ _ _
-7 _ _ _ _ _ W W W
-8 W W W W W W W W
-
---- RUNDA 35 ---
-Ruch wykonał: Agent W (Biały)
-Ruch: F7 -> E6 (z 6,5 do 5,4)
-Plansza po ruchu:
-  A B C D E F G H
-1 _ _ _ _ _ B B B
-2 _ _ _ B B B _ B
-3 _ B B _ _ B _ _
-4 _ B _ _ _ _ _ _
-5 _ _ _ W _ _ _ _
-6 _ _ _ _ W _ _ _
-7 _ _ _ _ _ o W W
-8 W W W W W W W W
-
---- RUNDA 36 ---
-Ruch wykonał: Agent B (Czarny)
-Ruch: C3 -> C4 (z 2,2 do 3,2)
-Plansza po ruchu:
-  A B C D E F G H
-1 _ _ _ _ _ B B B
-2 _ _ _ B B B _ B
-3 _ B o _ _ B _ _
-4 _ B B _ _ _ _ _
-5 _ _ _ W _ _ _ _
-6 _ _ _ _ W _ _ _
-7 _ _ _ _ _ _ W W
-8 W W W W W W W W
-
---- RUNDA 37 ---
-Ruch wykonał: Agent W (Biały)
-Ruch: D5 -> C4 (z 4,3 do 3,2)
-Plansza po ruchu:
-  A B C D E F G H
-1 _ _ _ _ _ B B B
-2 _ _ _ B B B _ B
-3 _ B _ _ _ B _ _
-4 _ B W _ _ _ _ _
-5 _ _ _ o _ _ _ _
-6 _ _ _ _ W _ _ _
-7 _ _ _ _ _ _ W W
-8 W W W W W W W W
-
---- RUNDA 38 ---
-Ruch wykonał: Agent B (Czarny)
-Ruch: B3 -> C4 (z 2,1 do 3,2)
-Plansza po ruchu:
-  A B C D E F G H
-1 _ _ _ _ _ B B B
-2 _ _ _ B B B _ B
-3 _ o _ _ _ B _ _
-4 _ B B _ _ _ _ _
-5 _ _ _ _ _ _ _ _
-6 _ _ _ _ W _ _ _
-7 _ _ _ _ _ _ W W
-8 W W W W W W W W
-
---- RUNDA 39 ---
-Ruch wykonał: Agent W (Biały)
-Ruch: E6 -> E5 (z 5,4 do 4,4)
-Plansza po ruchu:
-  A B C D E F G H
-1 _ _ _ _ _ B B B
-2 _ _ _ B B B _ B
-3 _ _ _ _ _ B _ _
-4 _ B B _ _ _ _ _
-5 _ _ _ _ W _ _ _
-6 _ _ _ _ o _ _ _
-7 _ _ _ _ _ _ W W
-8 W W W W W W W W
-
---- RUNDA 40 ---
-Ruch wykonał: Agent B (Czarny)
-Ruch: H1 -> G2 (z 0,7 do 1,6)
-Plansza po ruchu:
-  A B C D E F G H
-1 _ _ _ _ _ B B o
-2 _ _ _ B B B B B
-3 _ _ _ _ _ B _ _
-4 _ B B _ _ _ _ _
-5 _ _ _ _ W _ _ _
-6 _ _ _ _ _ _ _ _
-7 _ _ _ _ _ _ W W
-8 W W W W W W W W
-
---- RUNDA 41 ---
-Ruch wykonał: Agent W (Biały)
-Ruch: E5 -> D4 (z 4,4 do 3,3)
-Plansza po ruchu:
-  A B C D E F G H
-1 _ _ _ _ _ B B _
-2 _ _ _ B B B B B
-3 _ _ _ _ _ B _ _
-4 _ B B W _ _ _ _
-5 _ _ _ _ o _ _ _
-6 _ _ _ _ _ _ _ _
-7 _ _ _ _ _ _ W W
-8 W W W W W W W W
-
---- RUNDA 42 ---
-Ruch wykonał: Agent B (Czarny)
-Ruch: F2 -> E3 (z 1,5 do 2,4)
-Plansza po ruchu:
-  A B C D E F G H
-1 _ _ _ _ _ B B _
-2 _ _ _ B B o B B
-3 _ _ _ _ B B _ _
-4 _ B B W _ _ _ _
+1 W _ _ _ _ B B B
+2 o _ _ B B B B B
+3 B _ B B _ _ _ _
+4 B B _ _ _ _ _ _
 5 _ _ _ _ _ _ _ _
 6 _ _ _ _ _ _ _ _
-7 _ _ _ _ _ _ W W
-8 W W W W W W W W
-
---- RUNDA 43 ---
-Ruch wykonał: Agent W (Biały)
-Ruch: D4 -> E3 (z 3,3 do 2,4)
-Plansza po ruchu:
-  A B C D E F G H
-1 _ _ _ _ _ B B _
-2 _ _ _ B B _ B B
-3 _ _ _ _ W B _ _
-4 _ B B o _ _ _ _
-5 _ _ _ _ _ _ _ _
-6 _ _ _ _ _ _ _ _
-7 _ _ _ _ _ _ W W
-8 W W W W W W W W
-
---- RUNDA 44 ---
-Ruch wykonał: Agent B (Czarny)
-Ruch: D2 -> E3 (z 1,3 do 2,4)
-Plansza po ruchu:
-  A B C D E F G H
-1 _ _ _ _ _ B B _
-2 _ _ _ o B _ B B
-3 _ _ _ _ B B _ _
-4 _ B B _ _ _ _ _
-5 _ _ _ _ _ _ _ _
-6 _ _ _ _ _ _ _ _
-7 _ _ _ _ _ _ W W
-8 W W W W W W W W
-
---- RUNDA 45 ---
-Ruch wykonał: Agent W (Biały)
-Ruch: G7 -> F6 (z 6,6 do 5,5)
-Plansza po ruchu:
-  A B C D E F G H
-1 _ _ _ _ _ B B _
-2 _ _ _ _ B _ B B
-3 _ _ _ _ B B _ _
-4 _ B B _ _ _ _ _
-5 _ _ _ _ _ _ _ _
-6 _ _ _ _ _ W _ _
-7 _ _ _ _ _ _ o W
-8 W W W W W W W W
-
---- RUNDA 46 ---
-Ruch wykonał: Agent B (Czarny)
-Ruch: E3 -> E4 (z 2,4 do 3,4)
-Plansza po ruchu:
-  A B C D E F G H
-1 _ _ _ _ _ B B _
-2 _ _ _ _ B _ B B
-3 _ _ _ _ o B _ _
-4 _ B B _ B _ _ _
-5 _ _ _ _ _ _ _ _
-6 _ _ _ _ _ W _ _
-7 _ _ _ _ _ _ _ W
-8 W W W W W W W W
-
---- RUNDA 47 ---
-Ruch wykonał: Agent W (Biały)
-Ruch: F6 -> E5 (z 5,5 do 4,4)
-Plansza po ruchu:
-  A B C D E F G H
-1 _ _ _ _ _ B B _
-2 _ _ _ _ B _ B B
-3 _ _ _ _ _ B _ _
-4 _ B B _ B _ _ _
-5 _ _ _ _ W _ _ _
-6 _ _ _ _ _ o _ _
-7 _ _ _ _ _ _ _ W
-8 W W W W W W W W
-
---- RUNDA 48 ---
-Ruch wykonał: Agent B (Czarny)
-Ruch: E2 -> D3 (z 1,4 do 2,3)
-Plansza po ruchu:
-  A B C D E F G H
-1 _ _ _ _ _ B B _
-2 _ _ _ _ o _ B B
-3 _ _ _ B _ B _ _
-4 _ B B _ B _ _ _
-5 _ _ _ _ W _ _ _
-6 _ _ _ _ _ _ _ _
-7 _ _ _ _ _ _ _ W
-8 W W W W W W W W
-
---- RUNDA 49 ---
-Ruch wykonał: Agent W (Biały)
-Ruch: E5 -> D4 (z 4,4 do 3,3)
-Plansza po ruchu:
-  A B C D E F G H
-1 _ _ _ _ _ B B _
-2 _ _ _ _ _ _ B B
-3 _ _ _ B _ B _ _
-4 _ B B W B _ _ _
-5 _ _ _ _ o _ _ _
-6 _ _ _ _ _ _ _ _
-7 _ _ _ _ _ _ _ W
-8 W W W W W W W W
-
---- RUNDA 50 ---
-Ruch wykonał: Agent B (Czarny)
-Ruch: F1 -> E2 (z 0,5 do 1,4)
-Plansza po ruchu:
-  A B C D E F G H
-1 _ _ _ _ _ o B _
-2 _ _ _ _ B _ B B
-3 _ _ _ B _ B _ _
-4 _ B B W B _ _ _
-5 _ _ _ _ _ _ _ _
-6 _ _ _ _ _ _ _ _
-7 _ _ _ _ _ _ _ W
-8 W W W W W W W W
-
---- RUNDA 51 ---
-Ruch wykonał: Agent W (Biały)
-Ruch: D4 -> C3 (z 3,3 do 2,2)
-Plansza po ruchu:
-  A B C D E F G H
-1 _ _ _ _ _ _ B _
-2 _ _ _ _ B _ B B
-3 _ _ W B _ B _ _
-4 _ B B o B _ _ _
-5 _ _ _ _ _ _ _ _
-6 _ _ _ _ _ _ _ _
-7 _ _ _ _ _ _ _ W
-8 W W W W W W W W
-
---- RUNDA 52 ---
-Ruch wykonał: Agent B (Czarny)
-Ruch: G2 -> G3 (z 1,6 do 2,6)
-Plansza po ruchu:
-  A B C D E F G H
-1 _ _ _ _ _ _ B _
-2 _ _ _ _ B _ o B
-3 _ _ W B _ B B _
-4 _ B B _ B _ _ _
-5 _ _ _ _ _ _ _ _
-6 _ _ _ _ _ _ _ _
-7 _ _ _ _ _ _ _ W
-8 W W W W W W W W
-
---- RUNDA 53 ---
-Ruch wykonał: Agent W (Biały)
-Ruch: C3 -> B2 (z 2,2 do 1,1)
-Plansza po ruchu:
-  A B C D E F G H
-1 _ _ _ _ _ _ B _
-2 _ W _ _ B _ _ B
-3 _ _ o B _ B B _
-4 _ B B _ B _ _ _
-5 _ _ _ _ _ _ _ _
-6 _ _ _ _ _ _ _ _
-7 _ _ _ _ _ _ _ W
-8 W W W W W W W W
-
---- RUNDA 54 ---
-Ruch wykonał: Agent B (Czarny)
-Ruch: G1 -> F2 (z 0,6 do 1,5)
-Plansza po ruchu:
-  A B C D E F G H
-1 _ _ _ _ _ _ o _
-2 _ W _ _ B B _ B
-3 _ _ _ B _ B B _
-4 _ B B _ B _ _ _
-5 _ _ _ _ _ _ _ _
-6 _ _ _ _ _ _ _ _
-7 _ _ _ _ _ _ _ W
-8 W W W W W W W W
-
---- RUNDA 55 ---
-Ruch wykonał: Agent W (Biały)
-Ruch: B2 -> A1 (z 1,1 do 0,0)
-Plansza po ruchu:
-  A B C D E F G H
-1 W _ _ _ _ _ _ _
-2 _ o _ _ B B _ B
-3 _ _ _ B _ B B _
-4 _ B B _ B _ _ _
-5 _ _ _ _ _ _ _ _
-6 _ _ _ _ _ _ _ _
-7 _ _ _ _ _ _ _ W
+7 _ _ _ _ W W W W
 8 W W W W W W W W
 
