@@ -1,68 +1,51 @@
-(define (problem transport-problem)
-  (:domain transport-domain)
+(define (problem logistics-prob1)
+  (:domain logistics-extended)
+  
   (:objects
-    city-a port-a airport-a - location
-    city-b port-b airport-b - location
+    loc_A loc_B loc_C - location
     t1 - truck
     a1 - airplane
     s1 - ship
     p1 p2 - package
   )
+  
   (:init
+    (at t1 loc_A)
+    (at a1 loc_B)
+    (at s1 loc_C)
+    
+    (at p1 loc_A)
+    (at p2 loc_B)
+    
+    (road_route loc_A loc_B)
+    (road_route loc_B loc_A)
+    
+    (flight_route loc_B loc_C)
+    (flight_route loc_C loc_B)
+    (flight_route loc_A loc_C)
+    (flight_route loc_C loc_A)
+    
+    (sea_route loc_B loc_C)
+    (sea_route loc_C loc_B)
+    
+    (= (distance loc_A loc_B) 100)
+    (= (distance loc_B loc_A) 100)
+    (= (distance loc_B loc_C) 500)
+    (= (distance loc_C loc_B) 500)
+    (= (distance loc_A loc_C) 600)
+    (= (distance loc_C loc_A) 600)
+    
+    (= (speed t1) 50)
+    (= (speed a1) 250)
+    (= (speed s1) 50)
+    
     (= (total-cost) 0)
-
-    (connected-road city-a port-a)
-    (connected-road port-a city-a)
-    (connected-road city-a airport-a)
-    (connected-road airport-a city-a)
-    (connected-road city-b port-b)
-    (connected-road port-b city-b)
-    (connected-road city-b airport-b)
-    (connected-road airport-b city-b)
-    (connected-road city-a city-b)
-    (connected-road city-b city-a)
-
-    (connected-air airport-a airport-b)
-    (connected-air airport-b airport-a)
-
-    (connected-water port-a port-b)
-    (connected-water port-b port-a)
-
-    (= (distance city-a port-a) 20)
-    (= (distance port-a city-a) 20)
-    (= (distance city-a airport-a) 30)
-    (= (distance airport-a city-a) 30)
-    (= (distance city-b port-b) 15)
-    (= (distance port-b city-b) 15)
-    (= (distance city-b airport-b) 25)
-    (= (distance airport-b city-b) 25)
-
-    (= (distance city-a city-b) 500)
-    (= (distance city-b city-a) 500)
-    (= (distance airport-a airport-b) 450)
-    (= (distance airport-b airport-a) 450)
-    (= (distance port-a port-b) 600)
-    (= (distance port-b port-a) 600)
-
-    (= (speed t1) 60)
-    (= (fuel-cost t1) 2)
-
-    (= (speed a1) 800)
-    (= (fuel-cost a1) 15)
-
-    (= (speed s1) 30)
-    (= (fuel-cost s1) 1)
-
-    (at t1 city-a)
-    (at a1 airport-a)
-    (at s1 port-a)
-
-    (at p1 city-a)
-    (at p2 port-a)
   )
+  
   (:goal (and
-    (at p1 city-b)
-    (at p2 airport-b)
+    (delivered p1 loc_C)
+    (delivered p2 loc_A)
   ))
-  (:metric minimize (total-cost))
+  
+  (:metric minimize (+ (* 0.5 (total-time)) (* 0.5 (total-cost))))
 )
