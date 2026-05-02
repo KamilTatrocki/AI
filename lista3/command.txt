@@ -1,0 +1,1 @@
+docker run --rm -v "${PWD}:/data" aibasel/downward /data/domain.pddl /data/problem.pddl --search "astar(lmcut())"
