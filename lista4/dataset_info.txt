@@ -1,0 +1,20 @@
+ Drug: Rodzaj podawanego leku (D-penicillamine lub placebo);
+• Age: Wiek pacjenta w dniach;
+• Sex: Dwuklasowa klasyfikacja biologicznej płci pacjenta;
+• Ascites: Obecność wodobrzusza, czyli nieprawidłowego nagromadzenia płynu w jamie brzusznej;
+• Hepatomegaly: Obecność hepatomegalii (powiększenie wątroby);
+• Spiders: Obecność naczyniaków gwiaździstych (zmiany skórne w postaci centralnej, jasnoczerwo
+nej plamki z drobnymi, promieniście odchodzącymi naczyniami przypominającymi nogi pająka);
+• Edema: Obecność obrzęku (opuchlizna spowodowana nadmiarem płynu zatrzymanego w tkan
+kach), możliwe wartości: N (brak obrzęku i brak terapii diuretycznej), S (brak obrzęku po terapii
+diuretycznej lub obrzęk bez terapii diuretycznej), Y (obrzęk mimo terapii diuretycznej);
+• Bilirubin: Poziom bilirubiny mierzony w mg/dl;
+• Cholesterol: Poziom cholesterolu mierzony w mg/dl;
+• Albumin: Poziom albuminy mierzony w gm/dl;
+• Copper: Poziom miedzi w moczu mierzony w ug/day;
+• Alk_Phos: Poziom fosfatazy alkalicznej mierzony w U/liter;
+• SGOT: Poziom aminotransferazy asparaginianowej mierzony w U/ml;
+• Tryglicerides: Liczba triglicerydów;
+• Platelets: Liczba płytek krwi na jednostkę objętości (ml/1000);
+• Prothrombin: Czas protrombinowy (miara czasu krzepnięcia osocza), mierzony w sekundach;
+• Stage: Histologiczne stadium choroby (1, 2, 3, lub 4).
